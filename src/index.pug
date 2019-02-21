@@ -9,32 +9,94 @@ html(lang="en")
     title Portfolio | main page
   body
     .wrapper
-      section.section.hero
-        .container
-          header.header
-            .header__logo
-              a.logo(href="") ВА
-            .header__menu 
-              nav.menu
-                ul.menu__list
-                  - var links = ['Главная', "Обо мне", "Навыки", "Работы", "Отзывы", "Связаться"];
-                  each item in links
-                    li.menu__item
-                      a(href="#").menu__link #{item}
-            .header__buttons
-              ul.socials
-                - var socials = ['github', 'insta', 'vk'];
-                each item in socials
-                  li.socials__item
-                    a(href="#").socials__link
-                      +icon(item, 'socials__icon')
+      .welcome-section
+        section.fullscreen-section.hero
+          .container.hero__container
+            header.header
+              .header__logo
+                a.logo(href="") ВА
+              .header__menu 
+                nav.menu
+                  ul.menu__list
+                    - var links = ['Главная', "Обо мне", "Навыки", "Работы", "Отзывы", "Связаться"];
+                    each item in links
+                      li.menu__item
+                        a(href="#").menu__link #{item}
+              .header__buttons
+                ul.socials
+                  - var socials = ['github', 'insta', 'vk'];
+                  each item in socials
+                    li.socials__item
+                      a(href="#").socials__link
+                        +icon(item, 'socials__icon')
 
-          .hero__content
-            .userinfo
-              .userinfo__title Личный сайт веб - разработчика
-              .userinfo__name Владимир Астаханов
-        .scroll-down
-          a.scroll-down__btn Скролл
-            
+            .hero__content
+              .userinfo
+                .userinfo__title Личный сайт веб - разработчика
+                .userinfo__name Владимир Астаханов
+            .hero__downbutton
+              .scroll-down
+                a(href="").scroll-down__btn Скролл
+                
+        section.about
+          .container
+            .about__columns
+              .about__user
+                .user
+                  .user__avatar
+                    .user__avatar-wrapper
+                      img(src=require('images/content/user.jpg')).user__avatar-pic
+                  .user__about
+                    - 
+                      var userinfo = [
+                        ['Проживаю:', "Новосибирск"],
+                        ['Возраст:', "27 лет"],
+                        ['Родился:', "1 января 1991"],
+                      ];
+                    table.user__table
+                      each item in userinfo
+                        tr
+                          td.user__table-title #{item[0]}
+                          td.user__table-content #{item[1]}
+              .about__user-text
+                .about__main-text-content
+                  .about__desc Привет, меня зовут
+                  .about__title Владимир Астаханов
+                  .about__text-info
+                    p Я занимаюсь разработкой современных сайтов и приложений. Мне нравится делать интересные и современные проекты.
+                .about__ps
+                  | Этот сайт я сделал в рамках обучения в Школе онлайн образования LoftSchool. Чуть позже я освежу в нём свой контент. А пока посмотрите, как тут всё классно и красиво!
+
+      .middle-section
+        .triangles
+          svg(viewBox="0 0 1000 100" preserveAspectRatio="none").triangles__shape.triangles__shape_left
+            polygon(points="0,0 0,100 1000,100")
+          svg(viewBox="0 0 1000 100" preserveAspectRatio="none").triangles__shape.triangles__shape_right
+            polygon(points="0,100 1000,100 1000,0")
+        section.values
+          .container
+            .values__wrapper
+              .values__title
+                .values__title-container
+                  .values__title-text Чем я могу быть полезен вам
+                  .values__content
+                    | Этот сайт я сделал в рамках обучения в Школе онлайн образования LoftSchool. Чуть позже я освежу в нём свой контент. А пока посмотрите, как тут всё классно и красиво!
+              .values__widget
+                - var skills = ['Front-end', 'Workflow'];
+                  ul.skills
+                    each item in skills
+                      li.skills__item.skills-row
+                        .skills-row__title #{item}
+                        ul.skills-row__list
+                          - for (var i = 0; i < 4; i++)
+                            li.skills-row__item
+                              .skill
+                                svg(viewBox="0 0 100 100").skill__circle-shape
+                                  circle(cx="50", cy="50", r="40").skill__circle.skill__circle_under
+                                  circle(cx="50", cy="50", r="40" stroke="url(#gradient)" transform='rotate(180 50 50)').skill__circle.skill__circle_above
+                                  linearGradient(id="gradient" x1="0%" y1="0%" x2="100%" y2="0")
+                                    stop(offset="0%" stop-color="#5500f2")
+                                    stop(offset="100%" stop-color="#8f00ef")
+                        
 
 

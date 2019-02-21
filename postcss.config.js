@@ -22,7 +22,6 @@ module.exports = {
       removeFill: true,
       path: "./src/images/icons"
     }),
-    require("postcss-svgo"),
-    require("cssnano")()
+    require("cssnano")
   ]
 };
