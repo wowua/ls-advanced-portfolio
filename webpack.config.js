@@ -11,16 +11,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: ["vue-style-loader", "css-loader"]
-      },
-      {
-        test: /\.scss$/,
-        use: ["vue-style-loader", "css-loader", "sass-loader"]
-      },
-      {
-        test: /\.sass$/,
-        use: ["vue-style-loader", "css-loader", "sass-loader?indentedSyntax"]
+        test: /\.pcss$/,
+        use: ["vue-style-loader", "css-loader", "postcss-loader"]
       },
       {
         test: /\.vue$/,
@@ -50,7 +42,7 @@ module.exports = {
         use: ["pug-loader"]
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
+        test: /\.(png|jpg|gif|svg|woff|woff2)$/,
         loader: "file-loader",
         options: {
           name: "[name].[ext]?[hash]"
@@ -60,7 +52,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      vue$: "vue/dist/vue.esm.js"
+      vue$: "vue/dist/vue.esm.js",
+      images: path.resolve(__dirname, "src/images")
     },
     extensions: ["*", ".js", ".vue", ".json"]
   },

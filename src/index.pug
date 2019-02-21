@@ -6,4 +6,29 @@ html(lang="en")
     meta(http-equiv="X-UA-Compatible", content="ie=edge")
     title Portfolio | main page
   body
-    h1 Hello World !
+    .wrapper
+      section.section.hero
+        .container
+          header.header
+            .header__logo
+              a.logo(href="") ВА
+            .header__menu 
+              nav.menu
+                ul.menu__list
+                  - var links = ['Главная', "Обо мне", "Навыки", "Работы", "Отзывы", "Связаться"];
+                  each item in links
+                    li.menu__item
+                      a(href="#").menu__link #{item}
+            .header__buttons
+              ul.socials
+                li.socials__item
+                  a(href="#").socials__link
+          .hero__content
+            .userinfo
+              .userinfo__title Личный сайт веб - разработчика
+              .userinfo__name Владимир Астаханов
+        .scroll-down
+          a.scroll-down__btn Скролл
+            
+
+
