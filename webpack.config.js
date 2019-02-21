@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const SpriteLoaderPlugin = require("svg-sprite-loader/plugin");
 
 module.exports = {
   entry: "./src/main.js",
@@ -38,15 +39,41 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.pug$/,
-        use: ["pug-loader"]
-      },
-      {
-        test: /\.(png|jpg|gif|svg|woff|woff2)$/,
+        test: /\.(png|jpe?g|gif|woff|woff2)$/i,
         loader: "file-loader",
         options: {
           name: "[name].[ext]?[hash]"
         }
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "svg-sprite-loader",
+            options: {
+              extract: true,
+              spriteFilename: svgPath => `sprite${svgPath.substr(-4)}`
+            }
+          },
+          "svg-transform-loader",
+          {
+            loader: "svgo-loader",
+            options: {
+              plugins: [
+                { removeTitle: true },
+                {
+                  removeAttrs: {
+                    attrs: "(fill|stroke)"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        test: /\.pug$/,
+        use: ["pug-loader"]
       }
     ]
   },
@@ -68,7 +95,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "src/index.pug"
-    })
+    }),
+    new SpriteLoaderPlugin({ plainSprite: true })
   ],
   devtool: "#eval-source-map"
 };

@@ -1,3 +1,5 @@
+include ./mixins.pug
+
 <!DOCTYPE html>
 html(lang="en")
   head
@@ -21,8 +23,12 @@ html(lang="en")
                       a(href="#").menu__link #{item}
             .header__buttons
               ul.socials
-                li.socials__item
-                  a(href="#").socials__link
+                - var socials = ['github', 'insta', 'vk'];
+                each item in socials
+                  li.socials__item
+                    a(href="#").socials__link
+                      +icon(item, 'socials__icon')
+
           .hero__content
             .userinfo
               .userinfo__title Личный сайт веб - разработчика
