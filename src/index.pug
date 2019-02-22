@@ -45,7 +45,7 @@ html(lang="en")
                 .user
                   .user__avatar
                     .user__avatar-wrapper
-                      img(src=require('images/content/user.jpg')).user__avatar-pic
+                      +image('content/user.jpg', 'user__avatar-pic')
                   .user__about
                     - 
                       var userinfo = [
@@ -67,12 +67,12 @@ html(lang="en")
                 .about__ps
                   | Этот сайт я сделал в рамках обучения в Школе онлайн образования LoftSchool. Чуть позже я освежу в нём свой контент. А пока посмотрите, как тут всё классно и красиво!
 
+      .triangles.triangles_top
+        svg(viewBox="0 0 1000 100" preserveAspectRatio="none").triangles__shape.triangles__shape_left
+          polygon(points="0,0 0,100 1000,100")
+        svg(viewBox="0 0 1000 100" preserveAspectRatio="none").triangles__shape.triangles__shape_right
+          polygon(points="0,100 1000,100 1000,0")
       .middle-section
-        .triangles
-          svg(viewBox="0 0 1000 100" preserveAspectRatio="none").triangles__shape.triangles__shape_left
-            polygon(points="0,0 0,100 1000,100")
-          svg(viewBox="0 0 1000 100" preserveAspectRatio="none").triangles__shape.triangles__shape_right
-            polygon(points="0,100 1000,100 1000,0")
         section.values
           .container
             .values__wrapper
@@ -97,6 +97,87 @@ html(lang="en")
                                   linearGradient(id="gradient" x1="0%" y1="0%" x2="100%" y2="0")
                                     stop(offset="0%" stop-color="#5500f2")
                                     stop(offset="100%" stop-color="#8f00ef")
-                        
+                                .skill__circle-text Javascript
+        section.works
+          .container
+            .section-title Мои работы
+            .works__content
+              .works-slider
+                .works-slider__pics
+                  +image('content/slider-1.jpg', 'works-slider__fullpic')
+                  .works-slider__buttons
+                    a(href="#").works-slider__btn.works-slider__btn_next
+                    a(href="#").works-slider__btn.works-slider__btn_prev
+                  ul.works-slider__thumbs
+                    - for (var i = 3; i > 0; i--)
+                      li.works-slider__thumb-item(class=`${i === 1 ? 'active' : ''}`)
+                        a(href="").works-slider__thumb-link
+                          +image(`content/slider-${i}.jpg`, 'works-slider__thumb')
+                .works-slider__data(data-slide="1")
+                  ul.works-slider__tags
+                    - var tags = ['HTML', 'CSS', 'JavaScript'];
+                    each item in tags
+                      li.works-slider__tag-item 
+                        .tag #{item}
+                  .works-slider__title Сайт школы образования
+                  .works-slider__desc
+                    p Этот парень проходил обучение веб-разработке не где-то, а в LoftSchool! 2 месяца только самых тяжелых испытаний и бессонных ночей!
+                  .works-slider__link 
+                    a(href="").iconed-link Посмотреть сайт
+      .triangles.triangles_bottom
+        svg(viewBox="0 0 1000 100" preserveAspectRatio="none").triangles__shape.triangles__shape_left
+          polygon(points="0,0 1000,0 1000,100")
+        svg(viewBox="0 0 1000 100" preserveAspectRatio="none").triangles__shape.triangles__shape_right
+          polygon(points="0,0 0,100 1000,0")
+      section.contacts
+        .container
+          .contacts__about
+            .reviews
+              .reviews__header
+                .reviews__title.section-title Что обо мне говорят
+                .reviews__buttons
+                  .reviews__btn.reviews__btn_prev
+                  .reviews__btn.reviews__btn_next
+              ul.reviews__content
+                - for (var i = 0; i < 2; i++)
+                  li.reviews__content-item
+                    .quote
+                      .quote__text
+                        p Этот парень проходил обучение веб-разработке не где-то, а в Loftschool! 4,5 месяца только самых тяжелых испытаний и бессонных ночей!
+                      .quote__user
+                        .user-min
+                          .user-min__avatar
+                            .user-min__pic-wrapper
+                              +image('content/user.jpg', 'user-min__avatar-pic')
+                          .user-min__info
+                            .user-min__name Ковальчук Дмитрий
+                            .user-min__occ Основатель Loftschool
+          .contacts__form
+            .form
+              .section-title Связаться со мной
+              form.form__elem
+                .form__row
+                  - 
+                    var fields = [
+                      ['user', 'Введите ваше имя', 'Ковальчук Дмитрий'],
+                      ['envelope', 'Введите ваш email', 'loftschool@study.com'],
+                    ]
+                  each item in fields
+                    label.form-block(data-title=item[1])
+                      .form-block__container
+                        +icon(`${item[0]}`, 'form-block__icon') 
+                        .form-block__field
+                          input(type="text" placeholder=item[2]).form-block__input
+                .form__row
+                  label.form-block(data-title="Сообщение к письму")
+                    .form-block__container.form-block__container_align_top
+                      +icon('message', 'form-block__icon') 
+                      .form-block__field
+                        textarea(
+                          placeholder="Требуется ваша помощь в создании сайта. Интересуют сроки и цена вопроса"
+                        ).form-block__input
+                    
 
+
+        
 
