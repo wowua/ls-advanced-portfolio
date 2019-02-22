@@ -42,7 +42,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|woff|woff2)$/i,
         loader: "file-loader",
         options: {
-          name: "[name].[ext]?[hash]"
+          name: "[hash].[ext]"
         }
       },
       {
