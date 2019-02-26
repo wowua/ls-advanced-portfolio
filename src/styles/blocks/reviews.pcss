@@ -49,6 +49,10 @@
   display: flex;
   align-items: flex-start;
   margin-left: 2%;
+  @include tablets {
+    margin-left: 0;
+  }
+  
   @include phones {
     width: 100%;
     margin-left: 0;
@@ -57,9 +61,11 @@
 }
 
 .reviews__content-item {
-  width: 100%;
+  margin-right: 4%;
   @include phones {
     flex-shrink: 0;
+    margin-right: 0;
+    width: 100%;
   }
   &:last-child {
     margin-right: 0;
