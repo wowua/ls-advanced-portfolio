@@ -15,13 +15,5 @@
       "Node.js & npm": 30,
       "Mongo.db": 70
     }
-  },
-  {
-    "skillsGroup": "WorkFlow",
-    "skills": {
-      "Git": 30,
-      "Gulp": 60,
-      "Yarn": 60
-    }
   }
 ]
