@@ -1,3 +1,11 @@
+html {
+  @include desktop {
+    font-size: 15px;
+  }
+  @include tablets {
+    font-size: 14px;
+  }
+}
 body,
 html {
   height: 100%;
@@ -16,13 +24,17 @@ body {
   overflow: hidden;
   min-height: 100%;
   position: relative;
-  min-width: 1500px;
 }
 
 .container {
   margin: 0 auto;
-  width: 1480px;
+  max-width: 1480px;
+  width: 95%;
   // width: 1490px;
+
+  @include phones {
+    width: 85%;
+  }
 }
 
 .fullscreen-section {

@@ -33,7 +33,7 @@ html(lang="en")
 
               .hero__content
                 .userinfo
-                  .userinfo__title Личный сайт веб - разработчика
+                  .userinfo__title Личный сайт #[span.userinfo__occ веб разработчика]
                   .userinfo__name Владимир Астаханов
               .hero__downbutton
                 .scroll-down
@@ -101,21 +101,22 @@ html(lang="en")
                                       stop(offset="100%" stop-color="#8f00ef")
                                   .skill__circle-text Javascript
           section.works
-            .container
-              .section-title Мои работы
+            .container.works__container
+              .section-title.works__section-title Мои работы
               .works__content
                 .works-slider
-                  .works-slider__pics
-                    +image('content/slider-1.jpg', 'works-slider__fullpic')
-                    .works-slider__buttons
-                      a(href="#").works-slider__btn.works-slider__btn_next
-                      a(href="#").works-slider__btn.works-slider__btn_prev
-                    ul.works-slider__thumbs
-                      - for (var i = 3; i > 0; i--)
-                        li.works-slider__thumb-item(class=`${i === 1 ? 'active' : ''}`)
-                          a(href="").works-slider__thumb-link
-                            +image(`content/slider-${i}.jpg`, 'works-slider__thumb')
-                  .works-slider__data(data-slide="1")
+                  .works-slider__pics(data-slide="1")
+                    .works-slider__pics-content
+                      +image('content/slider-1.jpg', 'works-slider__fullpic')
+                      .works-slider__buttons
+                        a(href="#").works-slider__btn.works-slider__btn_next
+                        a(href="#").works-slider__btn.works-slider__btn_prev
+                      ul.works-slider__thumbs
+                        - for (var i = 3; i > 0; i--)
+                          li.works-slider__thumb-item(class=`${i === 1 ? 'active' : ''}`)
+                            a(href="").works-slider__thumb-link
+                              +image(`content/slider-${i}.jpg`, 'works-slider__thumb')
+                  .works-slider__data
                     ul.works-slider__tags
                       - var tags = ['HTML', 'CSS', 'JavaScript'];
                       each item in tags
@@ -156,7 +157,7 @@ html(lang="en")
                               .user-min__occ Основатель Loftschool
             .contacts__form
               .form
-                .section-title Связаться со мной
+                .section-title.contacts__form-title Связаться со мной
                 form.form__elem
                   .form__row
                     - 
@@ -179,7 +180,7 @@ html(lang="en")
                             placeholder="Требуется ваша помощь в создании сайта. Интересуют сроки и цена вопроса"
                           ).form-block__input
                   .from__row
-                    input(type="submit" value="отправить").gradient-btn
+                    input(type="submit" value="отправить").gradient-btn.form__submit
 
       footer.footer
         .container.footer__container
