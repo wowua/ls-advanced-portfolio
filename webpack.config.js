@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const SpriteLoaderPlugin = require("svg-sprite-loader/plugin");
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   entry: "./src/main.js",
@@ -11,6 +12,10 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.css$/,
+        use: ["vue-style-loader", "css-loader"]
+      },
       {
         test: /\.pcss$/,
         use: ["vue-style-loader", "css-loader", "postcss-loader"]
@@ -96,7 +101,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "src/index.pug"
     }),
-    new SpriteLoaderPlugin({ plainSprite: true })
+    new SpriteLoaderPlugin({ plainSprite: true }),
+    new VueLoaderPlugin()
   ],
   devtool: "#eval-source-map"
 };

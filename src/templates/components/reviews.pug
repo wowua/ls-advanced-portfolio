@@ -1,0 +1,21 @@
+script(type="text/x-template")#reviews
+  .reviews
+    .reviews__header
+      .reviews__title.section-title Что обо мне говорят
+      .reviews__buttons
+        button(type="button" @click="prev()").reviews__btn.reviews__btn_prev
+        button(type="button" @click="next()").reviews__btn.reviews__btn_next
+    .reviews__content
+      Flickity(ref="flickity" :options="flickityOptions")
+        .reviews__content-item
+          .quote
+            .quote__text
+              p Этот парень проходил обучение веб-разработке не где-то, а в Loftschool! 4,5 месяца только самых тяжелых испытаний и бессонных ночей!
+            .quote__user
+              .user-min
+                .user-min__avatar
+                  .user-min__pic-wrapper
+                    +image('content/user.jpg', 'user-min__avatar-pic')
+                .user-min__info
+                  .user-min__name Ковальчук Дмитрий
+                  .user-min__occ Основатель Loftschool
