@@ -1,14 +1,16 @@
 const path = require("path");
-const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const SpriteLoaderPlugin = require("svg-sprite-loader/plugin");
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 module.exports = {
-  entry: "./src/main.js",
+  entry:  {
+    main: './src/main.js',
+    admin: './src/admin/main.js'
+  },
   output: {
     path: path.resolve(__dirname, "./dist"),
-    filename: "build.js"
+    filename: "[name].build.js"
   },
   module: {
     rules: [
@@ -25,9 +27,6 @@ module.exports = {
         loader: "vue-loader",
         options: {
           loaders: {
-            // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
-            // the "scss" and "sass" values for the lang attribute to the right configs here.
-            // other preprocessors should work out of the box, no loader config like this necessary.
             scss: ["vue-style-loader", "css-loader", "sass-loader"],
             sass: [
               "vue-style-loader",
@@ -78,7 +77,15 @@ module.exports = {
       },
       {
         test: /\.pug$/,
-        use: ["pug-loader"]
+        oneOf: [
+          {
+            resourceQuery: /^\?vue/,
+            use: ["pug-plain-loader"]
+          },
+          {
+            use: ["pug-loader"]
+          }
+        ]
       }
     ]
   },
@@ -99,7 +106,13 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "src/index.pug"
+      template: "src/index.pug",
+      chunks: ['main']
+    }),
+    new HtmlWebpackPlugin({
+      template: "src/admin/index.pug",
+      filename: "admin/index.html",
+      chunks: ['admin']
     }),
     new SpriteLoaderPlugin({ plainSprite: true }),
     new VueLoaderPlugin()
