@@ -1,15 +1,24 @@
 <template lang="pug">
-  .card
-    .card__title(v-text="title")
-      slot(name="title" v-if="!!title === false")
-    .card__content
-      slot(name="content")
+  .card-container
+    .card(v-if="plain === false")
+      .card__title(v-text="title")
+        slot(name="title" v-if="!!title === false")
+      .card__content
+        slot(name="content")
+
+    .card.card_plain(v-if="plain")
+      slot(name="default")
+
 </template>
 
 <script>
 export default {
   props: {
-    title: String
+    title: String,
+    plain: {
+      type: Boolean,
+      default: false
+    }
   }
 };
 </script>
@@ -20,6 +29,10 @@ export default {
   background: #fff;
   box-shadow: 4.1px 2.9px 20px 0 rgba(0, 0, 0, 0.07);
   padding: 0 20px 30px;
+
+  &_plain {
+    padding: 0;
+  }
 }
 
 .card__title {

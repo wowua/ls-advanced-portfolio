@@ -6,7 +6,7 @@
       tabs
     main.content-container
       .container
-        h1.content__title Блок "Обо мне"
+        h1.content__title {{$route.meta.title}}
         router-view
 </template>
 
