@@ -1,13 +1,14 @@
 <template lang="pug">
-  .card-container
-    .card(v-if="plain === false")
-      .card__title(v-text="title")
-        slot(name="title" v-if="!!title === false")
-      .card__content
-        slot(name="content")
+  .card.card_plain(v-if="plain")
+    slot(name="default")
 
-    .card.card_plain(v-if="plain")
-      slot(name="default")
+  .card(v-else)
+    .card__title
+      .card__title-text(v-text="title")
+      slot(name="title" v-if="!!title === false")
+    .card__content
+      slot(name="content")
+
 
 </template>
 
@@ -29,6 +30,7 @@ export default {
   background: #fff;
   box-shadow: 4.1px 2.9px 20px 0 rgba(0, 0, 0, 0.07);
   padding: 0 20px 30px;
+  height: 100%;
 
   &_plain {
     padding: 0;

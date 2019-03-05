@@ -17,6 +17,13 @@ const routes = [
     meta: {
       title: "Блок «Работы»"
     }
+  },
+  {
+    path: "/reviews",
+    component: () => import('./components/reviews.vue'),
+    meta: {
+      title: "Блок «Отзывы»"
+    }
   }
 ];
 
