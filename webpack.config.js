@@ -1,28 +1,25 @@
 const path = require("path");
+const webpack = require("webpack");
+const isProductionBuild = process.env.NODE_ENV === "production";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const SpriteLoaderPlugin = require("svg-sprite-loader/plugin");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
-
-const css = {
-  test: /\.css$/,
-  use: ["vue-style-loader", "css-loader"]
-};
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 const pcss = {
-  test: /\.(pcss|postcss)$/,
-  use: ["vue-style-loader", "css-loader", "postcss-loader"]
+  test: /\.(p|post|)css$/,
+  use: [
+    isProductionBuild ? MiniCssExtractPlugin.loader : "vue-style-loader",
+    "css-loader",
+    "postcss-loader"
+  ]
 };
 
 const vue = {
   test: /\.vue$/,
-  loader: "vue-loader",
-  options: {
-    loaders: {
-      scss: ["vue-style-loader", "css-loader", "sass-loader"],
-      sass: ["vue-style-loader", "css-loader", "sass-loader?indentedSyntax"]
-    }
-    // other vue-loader options go here
-  }
+  loader: "vue-loader"
 };
 
 const js = {
@@ -82,17 +79,17 @@ const pug = {
   ]
 };
 
-module.exports = {
+const config = {
   entry: {
     main: "./src/main.js",
     admin: "./src/admin/main.js"
   },
   output: {
     path: path.resolve(__dirname, "./dist"),
-    filename: "[name].build.js"
+    filename: "[name].build.js",
   },
   module: {
-    rules: [css, pcss, vue, js, files, svg, pug]
+    rules: [pcss, vue, js, files, svg, pug]
   },
   resolve: {
     alias: {
@@ -125,23 +122,32 @@ module.exports = {
   devtool: "#eval-source-map"
 };
 
-// if (process.env.NODE_ENV === "production") {
-//   module.exports.devtool = "#source-map";
-//   // http://vue-loader.vuejs.org/en/workflow/production.html
-//   module.exports.plugins = (module.exports.plugins || []).concat([
-//     new webpack.DefinePlugin({
-//       "process.env": {
-//         NODE_ENV: '"production"'
-//       }
-//     }),
-//     new webpack.optimize.UglifyJsPlugin({
-//       sourceMap: true,
-//       compress: {
-//         warnings: false
-//       }
-//     }),
-//     new webpack.LoaderOptionsPlugin({
-//       minimize: true
-//     })
-//   ]);
-// }
+module.exports = (env, argv) => {
+  if (argv.mode === "production") {
+    config.devtool = "none";
+    config.plugins = (config.plugins || []).concat([
+      new webpack.DefinePlugin({
+        "process.env": {
+          NODE_ENV: '"production"'
+        }
+      }),
+      new MiniCssExtractPlugin({
+        filename: "[name].[hash].css",
+        chunkFilename: "[id].css"
+      })
+    ]);
+
+    config.optimization = {};
+
+    config.optimization.minimizer = [
+      new TerserPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: false,
+      }),
+      new OptimizeCSSAssetsPlugin({})
+    ];
+  }
+
+  return config;
+};
