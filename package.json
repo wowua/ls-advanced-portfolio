@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --mode=development --hot",
-    "build": "rm -rf dist && cross-env NODE_ENV=production webpack --mode=production --progress --hide-modules"
+    "build": "rm -rf dist && webpack --mode=production --progress"
   },
   "keywords": [],
   "author": "",
