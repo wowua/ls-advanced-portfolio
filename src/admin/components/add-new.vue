@@ -15,18 +15,27 @@ export default {
       default: "Добавить работу"
     }
   }
-}
+};
 </script>
 
 
 <style lang="postcss" scoped>
+@import url("../../styles/mixins.pcss");
+
 .btn {
-  background: linear-gradient(to right, #006aed, #3f35cb) center center no-repeat;
+  background: linear-gradient(to right, #006aed, #3f35cb) center center
+    no-repeat;
   display: flex;
   width: 100%;
   height: 100%;
   align-items: center;
   justify-content: center;
+
+  @include phones {
+    height: 111px;
+    justify-content: flex-start;
+    padding-left: 20px;
+  }
 }
 
 .btn__sign {
@@ -48,6 +57,23 @@ export default {
     font-size: 72px;
     font-weight: 300;
     color: #fff;
+    @include phones {
+      font-size: 24px;
+    }
+  }
+
+  @include phones {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0;
+    margin-right: 20px;
+  }
+}
+
+.btn__text {
+  @include phones {
+    display: flex;
+    align-items: center;
   }
 }
 
@@ -55,6 +81,9 @@ export default {
   font-size: 18px;
   color: #fff;
   font-weight: bold;
+  @include phones {
+    font-size: 16px;
+  }
 }
 </style>
 
