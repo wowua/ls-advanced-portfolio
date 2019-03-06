@@ -36,12 +36,13 @@ export default {
 
 .tags__item {
   white-space: nowrap;
-  padding: 10px 15px;
+  padding: 6px 20px;
   border-radius: 50px;
   background: #fff;
   color: rgba(40, 51, 64, 0.5);
   margin-right: 8px;
   margin-bottom: 8px;
+  font-size: 13px;
 
   &_interactive {
     display: flex;

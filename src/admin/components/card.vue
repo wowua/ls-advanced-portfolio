@@ -38,11 +38,15 @@ export default {
 }
 
 .card__title {
-  padding: 30px 0;
+  padding: 30px 2%;
   border-bottom: 1px solid rgba(#1f232d, 0.15);
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 30px;
+}
+
+.card__content {
+  padding: 0 2%;
 }
 </style>
 

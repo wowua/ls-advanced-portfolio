@@ -1,21 +1,25 @@
 <template lang="pug">
   div.root-container
-    header.header-container
-      app-header
-    section.tabs-container
-      tabs
-    main.content-container
-      .container
-        h1.content__title {{$route.meta.title}}
-        router-view
+    template(v-if="$route.meta.public")
+      router-view
+
+    template(v-else)
+      header.header-container
+        app-header
+      section.tabs-container
+        tabs
+      main.content-container
+        .container
+          h1.content__title {{$route.meta.title}}
+          router-view
 </template>
 
 <script>
 export default {
   components: {
-    appHeader: () => import("./components/header.vue"),
-    tabs: () => import("./components/tabs"),
-    about: () => import("./components/about.vue")
+    appHeader: () => import("components/header.vue"),
+    tabs: () => import("components/tabs"),
+    about: () => import("components/about.vue")
   }
 };
 </script>

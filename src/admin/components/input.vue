@@ -1,7 +1,7 @@
 <template lang="pug">
   label.input(
     v-if="type === 'input'" 
-    :class="{'input_labeled' : !!title}"
+    :class="[{'input_labeled' : !!title}, iconClass]"
   ) 
     .input__title(v-if="title") {{title}} 
     input(
@@ -30,7 +30,18 @@ export default {
       type: String,
       default: "input"
     },
-    value: String
+    value: String,
+    icon: {
+      type: String,
+      default: "",
+      validator: value => ["", "person", "key"].includes(value)
+    }
+  },
+  computed: {
+    iconClass() {
+      const iconName = this.icon;
+      return iconName.length ? ` input_iconed input_icon-${iconName}` : "";
+    }
   }
 };
 </script>
@@ -39,16 +50,30 @@ export default {
 <style lang="postcss" scoped>
 .input {
   display: block;
-}
+  position: relative;
 
-.input__elem {
-  width: 100%;
-}
+  &_labeled {
+    .input__elem {
+      padding: 15px 0 18px;
+    }
+  }
 
-.input_labeled {
-  .input__elem {
-    padding-right: 0;
-    padding-left: 0;
+  &_iconed {
+    .input__title {
+      margin-left: 45px;
+    }
+    .input__elem {
+      padding-left: 45px;
+      background: left center / auto 23px no-repeat;
+    }
+  }
+
+  &_icon {
+    &-person {
+      .input__elem {
+        background-image: svg-load("user.svg", fill=#cfd2d7);
+      }
+    }
   }
 }
 
@@ -69,7 +94,8 @@ export default {
 }
 
 .input__elem {
-  padding: 10px 2%;
+  width: 100%;
+  padding: 10px 8%;
   border: none;
   border-bottom: 1px solid #1f232d;
 

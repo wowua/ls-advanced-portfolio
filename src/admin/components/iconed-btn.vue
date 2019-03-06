@@ -14,7 +14,7 @@
     content: attr(data-text);
     font-weight: 600;
     color: rgba(65, 76, 99, 0.4);
-    margin-right: 10px;
+    margin-right: 18px;
   }
 
   &:after {

@@ -69,6 +69,7 @@ export default {
 
 .reviews__form-content {
   display: flex;
+  padding-right: 20%;
 }
 
 .reviews__form-row {

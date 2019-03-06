@@ -99,6 +99,10 @@ export default {
   flex: 1;
   margin-right: 30px;
 
+  &:first-child {
+    max-width: 46%;
+  }
+
   &:last-child {
     margin-right: 0;
   }
@@ -118,21 +122,21 @@ export default {
 .works__title {
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 22px;
+  margin-bottom: 15px;
 }
 
 .works__text {
   font-weight: 600;
   line-height: 1.88;
   color: rgba(65, 76, 99, 0.5);
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .works__link {
   display: block;
   font-weight: 600;
   color: #383bcf;
-  margin-bottom: 42px;
+  margin-bottom: 44px;
 }
 
 .works__btns {
@@ -147,7 +151,7 @@ export default {
 
 .works__tag {
   position: absolute;
-  bottom: 10px;
+  bottom: 2px;
   right: 0;
 }
 

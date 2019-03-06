@@ -15,37 +15,56 @@
                 button.skill__button.skills__check
               td.skills__cell          
                 button.skill__button.skills__remove
-          .add-new
-            app-input(
-              placeholder="Новый навык"
-            )
-            button(type="button" data-text="+").add-new__button
+          form.add-new
+              .add-new__inputs
+                .add-new__col
+                  app-input(
+                    placeholder="Новый навык"
+                  )
+                .add-new__col.add-new__col_small
+                  app-input
+              button(type="submit" data-text="+").add-new__button
 
 </template>
 <script>
 export default {
   components: {
     skillsCard: () => import("./card.vue"),
-    appInput: () => import('./input.vue')
+    appInput: () => import("./input.vue")
   }
 };
 </script>
 
 <style lang="postcss" scoped>
+@import "../../styles/mixins.pcss";
 .skills {
   margin-bottom: 60px;
+
+  tr:last-child {
+    .skills__cell {
+      padding-bottom: 0;
+    }
+  }
 }
 
 .skill-list {
   display: flex;
   flex-wrap: wrap;
   margin-left: -30px;
+  @include phones {
+    margin-left: 0;
+  }
 }
 
 .skill-list__item {
   width: calc(100% / 2 - 30px);
   margin-left: 30px;
   margin-bottom: 30px;
+
+  @include phones {
+    width: 100%;
+    margin-left: 0;
+  }
 }
 
 .skills {
@@ -53,17 +72,21 @@ export default {
 }
 
 .skills__cell {
-  width: 100%;
+  padding-bottom: 4px;
+  &:first-child {
+    width: 60%;
+  }
 }
 
 .skills__input {
   white-space: nowrap;
   position: relative;
   margin-right: 50px;
+  display: inline-flex;
   &:before {
     content: "%";
     position: absolute;
-    right: 0;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
     color: rgba(65, 76, 99, 0.7);
@@ -81,8 +104,9 @@ export default {
 }
 
 .skills__check {
-  width: 15px;
-  height: 12px;
+  width: 10px;
+  height: 18px;
+  margin-right: 11px;
   background: svg-load("tick.svg", fill=#d9dbe0) center center no-repeat /
     contain;
 
@@ -93,7 +117,7 @@ export default {
 
 .skills__remove {
   width: 15px;
-  height: 12px;
+  height: 22px;
   background: svg-load("trash.svg", fill=#414c62) center center no-repeat /
     contain;
 }
@@ -102,6 +126,25 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  padding-left: 18%;
+}
+
+.add-new__inputs {
+  display: flex;
+  width: 100%;
+}
+
+.add-new__col {
+  margin-right: 10px;
+  flex: 1;
+
+  &:last-child {
+    margin-right: 0;
+  }
+  &_small {
+    width: 75px;
+    flex: initial;
+  }
 }
 
 .add-new__button {
@@ -109,11 +152,12 @@ export default {
   height: 40px;
   position: relative;
   padding: 0;
-  background: linear-gradient(to right, #006aed 0%,#3f35cb 100%) center center;
+  background: linear-gradient(to right, #006aed 0%, #3f35cb 100%) center center;
   border-radius: 50%;
   overflow: hidden;
   display: block;
   margin-left: 34px;
+  flex-shrink: 0;
 
   &:before {
     content: attr(data-text);
