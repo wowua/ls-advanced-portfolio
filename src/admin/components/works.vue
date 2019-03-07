@@ -105,7 +105,8 @@ export default {
   height: 260px;
 }
 
-.edit-form__pic {
+
+.edit-form__img {
   object-fit: cover;
   width: 100%;
   height: 100%;

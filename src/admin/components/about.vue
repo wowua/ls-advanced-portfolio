@@ -24,7 +24,6 @@
                 .add-new__col.add-new__col_small
                   app-input
               button(type="submit" data-text="+").add-new__button
-
 </template>
 <script>
 export default {
