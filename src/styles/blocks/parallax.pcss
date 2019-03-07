@@ -4,7 +4,10 @@
   bottom: 0;
   left: 0;
   right: 0;
-  perspective: 100px;
+
+  @include tablets {
+    display: none;
+  }
 }
 
 .parallax__layer {
@@ -14,6 +17,7 @@
   right: 0;
   bottom: 0;
   display: none;
+  will-change: transform;
   &:nth-child(1) {
     display: block;
     .parallax__image {
@@ -23,7 +27,7 @@
     }
   }
   &:nth-child(2) {
-    transform: translateZ(-50px) scale(1.5);
+    // transform: translateZ(-50px) scale(1.5);
     display: block;
     .parallax__image {
       bottom: 0;
@@ -32,7 +36,7 @@
     }
   }
   &:nth-child(3) {
-    transform: translateZ(-100px) scale(2);
+    // transform: translateZ(-100px) scale(2);
     display: block;
     .parallax__image {
       left: 50%;
@@ -41,7 +45,7 @@
     }
   }
   &:nth-child(4) {
-    transform: translateZ(-150px) scale(2.5);
+    // transform: translateZ(-150px) scale(2.5);
     display: block;
     .parallax__image {
       left: 0;
@@ -50,7 +54,7 @@
     }
   }
   &:nth-child(5) {
-    transform: translateZ(-200px) scale(3);
+    // transform: translateZ(-200px) scale(3);
     display: block;
     .parallax__image {
       left: 0;
@@ -59,7 +63,7 @@
   }
   &:nth-child(6) {
     display: block;
-    transform: translateZ(-250px) scale(3.5) ;
+    // transform: translateZ(-250px) scale(3.5) ;
     .parallax__image {
       right: 0;
       // top: 416px;
@@ -68,11 +72,11 @@
   }
   &:nth-child(7) {
     display: block;
-    transform: translateZ(-300px) scale(4);
+    // transform: translateZ(-300px) scale(4);
     .parallax__image {
       left: 0;
       width: 100%;
-      bottom: 0;
+      bottom: 0px;
     }
   }
 }
