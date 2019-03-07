@@ -87,7 +87,7 @@ module.exports = (env, argv) => {
       admin: ["@babel/polyfill", "./src/admin/main.js"]
     },
     output: {
-      path: path.resolve(__dirname, "./dist"),
+      path: path.resolve(__dirname, "./docs"),
       filename: "[name].[hash].build.js",
       publicPath: "/",
       chunkFilename: "[chunkhash].js"
