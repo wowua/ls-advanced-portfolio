@@ -170,7 +170,7 @@ module.exports = (env, argv) => {
       ...configTemplate.plugins,
       new HtmlWebpackPlugin({
         template: "src/admin/index.pug"
-      })
+      }),
     ]
   };
 
