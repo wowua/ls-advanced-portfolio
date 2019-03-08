@@ -137,6 +137,7 @@ module.exports = (env, argv) => {
 
   const mainConfig = {
     ...configTemplate,
+    name: 'main-config',
     entry: {
       main: ["@babel/polyfill", "./src/main.js"]
     },
@@ -155,6 +156,7 @@ module.exports = (env, argv) => {
 
   const adminConfig = {
     ...configTemplate,
+    name: 'admin-config',
     entry: {
       admin: "./src/admin/main.js"
     },
