@@ -97,7 +97,7 @@ module.exports = (env, argv) => {
     devServer: {
       historyApiFallback: true,
       noInfo: false,
-      overlay: true
+      overlay: true,
     },
     performance: {
       hints: false
@@ -137,12 +137,12 @@ module.exports = (env, argv) => {
 
   const mainConfig = {
     ...configTemplate,
-    name: 'main-config',
+    name: "main-config",
     entry: {
-      main: ["@babel/polyfill", "./src/main.js"]
+      main: "./src/main.js"
     },
     output: {
-      filename: "[name].[hash].build.js",
+      filename: "[name].build.js",
       chunkFilename: "[chunkhash].js",
       path: path.resolve(__dirname, `${buildDir}`)
     },
@@ -156,20 +156,21 @@ module.exports = (env, argv) => {
 
   const adminConfig = {
     ...configTemplate,
-    name: 'admin-config',
+    name: "admin-config",
     entry: {
       admin: "./src/admin/main.js"
     },
     output: {
-      filename: "[name].[hash].build.js",
+      publicPath: isProductionBuild ? "" : "./admin/",
+      filename: "[name].build.js",
       chunkFilename: "[chunkhash].js",
       path: path.resolve(__dirname, `${buildDir}/admin`)
     },
     plugins: [
+      ...configTemplate.plugins,
       new HtmlWebpackPlugin({
         template: "src/admin/index.pug"
-      }),
-      ...configTemplate.plugins
+      })
     ]
   };
 
