@@ -9,6 +9,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = (env, argv) => {
   const isProductionBuild = argv.mode === "production";
+  const buildDir = "./docs";
 
   const pcss = {
     test: /\.(p|post|)css$/,
@@ -81,17 +82,7 @@ module.exports = (env, argv) => {
     ]
   };
 
-  const config = {
-    entry: {
-      main: ["@babel/polyfill", "./src/main.js"],
-      admin: ["@babel/polyfill", "./src/admin/main.js"]
-    },
-    output: {
-      path: path.resolve(__dirname, "./docs"),
-      filename: "[name].[hash].build.js",
-      publicPath: "/",
-      chunkFilename: "[chunkhash].js"
-    },
+  const configTemplate = {
     module: {
       rules: [pcss, vue, js, files, svg, pug]
     },
@@ -112,15 +103,6 @@ module.exports = (env, argv) => {
       hints: false
     },
     plugins: [
-      new HtmlWebpackPlugin({
-        template: "src/index.pug",
-        chunks: ["main"]
-      }),
-      new HtmlWebpackPlugin({
-        template: "src/admin/index.pug",
-        filename: "admin/index.html",
-        chunks: ["admin"]
-      }),
       new SpriteLoaderPlugin({ plainSprite: true }),
       new VueLoaderPlugin()
     ],
@@ -128,8 +110,8 @@ module.exports = (env, argv) => {
   };
 
   if (isProductionBuild) {
-    config.devtool = "none";
-    config.plugins = (config.plugins || []).concat([
+    configTemplate.devtool = "none";
+    configTemplate.plugins = (configTemplate.plugins || []).concat([
       new webpack.DefinePlugin({
         "process.env": {
           NODE_ENV: '"production"'
@@ -141,9 +123,9 @@ module.exports = (env, argv) => {
       })
     ]);
 
-    config.optimization = {};
+    configTemplate.optimization = {};
 
-    config.optimization.minimizer = [
+    configTemplate.optimization.minimizer = [
       new TerserPlugin({
         cache: true,
         parallel: true,
@@ -153,6 +135,41 @@ module.exports = (env, argv) => {
     ];
   }
 
-  return config;
+  const mainConfig = {
+    ...configTemplate,
+    entry: {
+      main: ["@babel/polyfill", "./src/main.js"]
+    },
+    output: {
+      filename: "[name].[hash].build.js",
+      chunkFilename: "[chunkhash].js",
+      path: path.resolve(__dirname, `${buildDir}`)
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: "src/index.pug"
+      }),
+      ...configTemplate.plugins
+    ]
+  };
 
+  const adminConfig = {
+    ...configTemplate,
+    entry: {
+      admin: "./src/admin/main.js"
+    },
+    output: {
+      filename: "[name].[hash].build.js",
+      chunkFilename: "[chunkhash].js",
+      path: path.resolve(__dirname, `${buildDir}/admin`)
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: "src/admin/index.pug"
+      }),
+      ...configTemplate.plugins
+    ]
+  };
+
+  return [mainConfig, adminConfig];
 };
