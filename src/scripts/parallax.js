@@ -1,7 +1,7 @@
 const parallax = document.querySelector(".parallax");
 const layers = parallax.children;
 
-const layersToExclude = [4, 6]; // чувак на горе, самые нижние облака
+const layersToExclude = [0, 4, 6]; // чувак на горе, самые нижние облака
 
 function moveLayersDependsOnScroll(wscroll) {
   Array.from(layers).forEach((layer, layerIndex) => {

@@ -1,7 +1,10 @@
 .welcome-section {
   position: relative;
 
+  @include super-wide {
+    background: url('~images/bg/hero_wide.jpg') center top no-repeat / cover;
+  }
   @include tablets {
-    background: url('~images/bg/hero.jpg') center center no-repeat / cover;
+    background: url('~images/bg/hero.jpg') center top no-repeat / cover;
   }
 }
