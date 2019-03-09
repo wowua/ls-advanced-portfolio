@@ -97,7 +97,7 @@ module.exports = (env, argv) => {
     devServer: {
       historyApiFallback: true,
       noInfo: false,
-      overlay: true,
+      overlay: true
     },
     performance: {
       hints: false
@@ -139,7 +139,7 @@ module.exports = (env, argv) => {
     ...configTemplate,
     name: "main-config",
     entry: {
-      main: "./src/main.js"
+      main: ["@babel/polyfill", "./src/main.js"]
     },
     output: {
       filename: "[name].build.js",
@@ -158,7 +158,7 @@ module.exports = (env, argv) => {
     ...configTemplate,
     name: "admin-config",
     entry: {
-      admin: "./src/admin/main.js"
+      admin: ["@babel/polyfill", "./src/admin/main.js"]
     },
     output: {
       publicPath: isProductionBuild ? "" : "./admin/",
@@ -170,7 +170,7 @@ module.exports = (env, argv) => {
       ...configTemplate.plugins,
       new HtmlWebpackPlugin({
         template: "src/admin/index.pug"
-      }),
+      })
     ]
   };
 
