@@ -31,6 +31,8 @@ export default {
   box-shadow: 4.1px 2.9px 20px 0 rgba(0, 0, 0, 0.07);
   padding: 0 20px 30px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   &_plain {
     padding: 0;
@@ -47,6 +49,9 @@ export default {
 
 .card__content {
   padding: 0 2%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 </style>
 

@@ -10,16 +10,14 @@
         tabs
       main.content-container
         .container
-          h1.content__title {{$route.meta.title}}
-          router-view
+          router-view(:pageTitle="$route.meta.title")
 </template>
 
 <script>
 export default {
   components: {
     appHeader: () => import("components/header.vue"),
-    tabs: () => import("components/tabs"),
-    about: () => import("components/about.vue")
+    tabs: () => import("components/tabs")
   }
 };
 </script>
@@ -61,10 +59,14 @@ export default {
   padding-top: 60px;
 }
 
-.content__title {
+.page-title {
   margin-bottom: 60px;
   font-size: 21px;
   font-weight: bold;
+}
+
+button {
+  background: transparent;
 }
 </style>
 

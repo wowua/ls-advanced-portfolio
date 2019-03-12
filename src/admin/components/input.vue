@@ -1,7 +1,7 @@
 <template lang="pug">
   label.input(
-    v-if="type === 'input'" 
-    :class="[{'input_labeled' : !!title}, iconClass]"
+    v-if="fieldType === 'input'" 
+    :class="[{'input_labeled' : !!title, 'no-side-paddings' : noSidePaddings}, iconClass]"
   ) 
     .input__title(v-if="title") {{title}} 
     input(
@@ -12,7 +12,7 @@
     ).input__elem
 
   label.textarea(
-    v-else-if="type === 'textarea'"
+    v-else-if="fieldType === 'textarea'"
     v-bind="$attrs"
     :value="value"
     @input="$emit('input', $event.target.value)"
@@ -26,7 +26,8 @@ export default {
   inheritAttrs: false,
   props: {
     title: String,
-    type: {
+    noSidePaddings: Boolean,
+    fieldType: {
       type: String,
       default: "input"
     },
@@ -51,6 +52,13 @@ export default {
 .input {
   display: block;
   position: relative;
+
+  &.no-side-paddings {
+    .input__elem {
+      padding-right: 0;
+      padding-left: 0;
+    }
+  }
 
   &_labeled {
     .input__elem {

@@ -1,7 +1,7 @@
 <template lang="pug">
   button(
     type="button"
-  ).btn
+  ).btn-container
     .btn__text
       .btn__sign
       .btn__title {{title}}
@@ -22,7 +22,7 @@ export default {
 <style lang="postcss" scoped>
 @import url("../../styles/mixins.pcss");
 
-.btn {
+.btn-container {
   background: linear-gradient(to right, #006aed, #3f35cb) center center
     no-repeat;
   display: flex;

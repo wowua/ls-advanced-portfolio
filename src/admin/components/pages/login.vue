@@ -25,12 +25,12 @@ import { mapActions } from "vuex";
 import {
   setTokenToLocalStorage,
   setAuthHttpHeaderToAxios
-} from "../helpers/token.js";
-import axiosInstance from "../requests.js";
+} from "@/helpers/token.js";
+import axiosInstance from "@/requests.js";
 
 export default {
   components: {
-    appInput: () => import("./input.vue")
+    appInput: () => import("components/input.vue")
   },
   data() {
     return {
