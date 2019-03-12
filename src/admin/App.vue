@@ -1,23 +1,48 @@
 <template lang="pug">
-  div.root-container
-    template(v-if="$route.meta.public")
-      router-view
+  div
+    div.root-container
+      template(v-if="$route.meta.public")
+        router-view
 
-    template(v-else)
-      header.header-container
-        app-header
-      section.tabs-container
-        tabs
-      main.content-container
-        .container
-          router-view(:pageTitle="$route.meta.title")
+      template(v-else)
+        header.header-container
+          app-header
+        section.tabs-container
+          tabs
+        main.content-container
+          .container
+            router-view(:pageTitle="$route.meta.title")
+    .tooltips-container(:class="{'showed' : showed}")
+        tooltip(type="error")
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   components: {
-    appHeader: () => import("components/header.vue"),
-    tabs: () => import("components/tabs")
+    appHeader: () => import("components/header"),
+    tabs: () => import("components/tabs"),
+    tooltip: () => import("components/tooltip")
+  },
+  computed: {
+    ...mapState("tooltips", {
+      showed: state => state.showed
+    })
+  },
+  methods: {
+    ...mapActions("tooltips", ["closeTooltip"])
+  },
+  watch: {
+    showed(value) {
+      if (value === true) {
+        let timeout;
+        clearTimeout(timeout);
+
+        timeout = setTimeout(() => {
+          this.closeTooltip();
+        }, 3000);
+      }
+    }
   }
 };
 </script>
@@ -63,6 +88,20 @@ export default {
   margin-bottom: 60px;
   font-size: 21px;
   font-weight: bold;
+}
+
+.tooltips-container {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 110%) ;
+  visibility: hidden;
+  transition: 0.3s;
+
+  &.showed {
+    transform: translate(-50%, 0%);
+    visibility: visible;
+  }
 }
 
 button {
