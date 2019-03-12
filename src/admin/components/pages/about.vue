@@ -9,8 +9,9 @@
     ul.skill-list
       li.skill-list__item(v-if="showAddingCard")
         add-new-skills-group(
+          v-model="title"
           @closeOrRemove="close"
-          @approve="storeSkillsGroup"
+          @approve="addSkillsGroup"
         )
       li.skill-list__item(v-for="n in 4")
         skills-card(
@@ -35,6 +36,7 @@
               add-new-skill
 </template>
 <script>
+import { mapActions } from "vuex";
 export default {
   components: {
     skillsCard: () => import("components/card.vue"),
@@ -51,15 +53,28 @@ export default {
   },
   data() {
     return {
-      showAddingCard: false
+      showAddingCard: false,
+      title: ""
     };
   },
   methods: {
+    ...mapActions('skills', ['storeSkillsGroup']),
+    ...mapActions('tooltips', ['showTooltip']),
     close() {
       this.showAddingCard = false;
     },
-    storeSkillsGroup() {
-      
+    async addSkillsGroup() {
+      this.showTooltip({
+        type: 'error',
+        text: "nwe"
+      })
+      // try {
+      //   const response = await this.storeSkillsGroup({
+      //     title: this.title
+      //   })
+      // } catch (error) {
+
+      // }
     }
   }
 };

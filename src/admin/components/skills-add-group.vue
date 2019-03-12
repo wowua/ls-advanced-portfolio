@@ -6,6 +6,8 @@
           .skills-card-title__input
             app-input(
               placeholder="Название новой группы"
+              :value="value"
+              @input="$emit('input', $event)"
               no-side-paddings
             )
           .skills-card-title__buttons
@@ -33,6 +35,9 @@ export default {
     appInput: () => import("components/input.vue"),
     iconedBtn: () => import("components/iconed-btn.vue"),
     addNewSkill: () => import("components/skills-add-item.vue")
+  },
+  props: {
+    value: String
   },
   data() {
     return {
