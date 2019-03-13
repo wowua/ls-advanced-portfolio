@@ -36,25 +36,43 @@
     display: block;
   }
 
-  &.is-pencil {
-    &:after {
-      background: svg-load('pencil.svg', fill=#3942cc) center center no-repeat / contain;
+  @each $icon, $fill in (pencil, cross, tick, trash),
+    (#3942cc, #c73033, #00d70a, #414c62)
+  {
+    &.is-$(icon) {
+      &:after {
+        background: svg-load("$(icon).svg", fill=$(fill))
+          center
+          center
+          no-repeat /
+          contain;
+      }
     }
   }
 
-  &.is-cross {
-    &:after {
-      background: svg-load('remove.svg', fill=#c73033) center center no-repeat / contain;
-    }
-  }
-  &.is-tick {
-    &:after {
-      background: svg-load('tick.svg', fill=#00d70a) center center no-repeat / contain;
-    }
-  }
-  &.is-trash {
-    &:after {
-      background: svg-load('trash.svg', fill=#414c62) center center no-repeat / contain;
+  &.grayscale {
+    @each $icon, $fill in (pencil, cross, tick, trash),
+      (#3942cc, #c73033, #00d70a, #414c62)
+    {
+      &.is-$(icon) {
+        &:after {
+          background: svg-load("$(icon).svg", fill=#a0a5b1)
+            center
+            center
+            no-repeat /
+            contain;
+        }
+
+        &:hover {
+          &:after {
+            background: svg-load("$(icon).svg", fill=$(fill))
+              center
+              center
+              no-repeat /
+              contain;
+          }
+        }
+      }
     }
   }
 }
