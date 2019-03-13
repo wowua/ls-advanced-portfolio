@@ -21,20 +21,9 @@
           :title="skillsCategory.category"
         ) 
           template(slot="content")
-            table.skills
-              tr(v-for="n in 3")
-                td.skills__cell Html 5
-                td.skills__cell 
-                  .skills__input
-                    input(value="100" type="number").skills__input-text
-                td.skills__cell
-                  iconed-btn(
-                    class="is-tick no-words"
-                  )
-                td.skills__cell          
-                  iconed-btn(
-                    class="is-trash no-words"
-                  )
+            skills-table(
+              :categoryId="skillsCategory.id"
+            )
             .add-new
               add-new-skill
 </template>
@@ -46,7 +35,8 @@ export default {
     appInput: () => import("components/input.vue"),
     iconedBtn: () => import("components/iconed-btn.vue"),
     addNewSkillsGroup: () => import("components/skills-add-group.vue"),
-    addNewSkill: () => import("components/skills-add-item.vue")
+    addNewSkill: () => import("components/skills-add-item.vue"),
+    skillsTable: () => import("components/skills-items.vue")
   },
   props: {
     pageTitle: {
@@ -80,9 +70,9 @@ export default {
         this.fetchCategories();
       } catch (error) {
         this.showTooltip({
-          type: 'error',
+          type: "error",
           text: error.message
-        })
+        });
       }
     },
     async addSkillsGroup() {
@@ -178,42 +168,6 @@ export default {
     width: 100%;
     margin-left: 0;
   }
-}
-
-.skills {
-  width: 100%;
-}
-
-.skills__cell {
-  padding-bottom: 4px;
-  &:first-child {
-    width: 60%;
-  }
-}
-
-.skills__input {
-  white-space: nowrap;
-  position: relative;
-  margin-right: 50px;
-  display: inline-flex;
-  &:before {
-    content: "%";
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: rgba(65, 76, 99, 0.7);
-    opacity: 0.7;
-  }
-}
-
-.skills__input-text {
-  width: 75px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #1f232d;
-  padding: 9px 15px 9px 9px;
-  position: relative;
 }
 
 .add-new {
