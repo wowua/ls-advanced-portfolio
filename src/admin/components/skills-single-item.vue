@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       blocked: false
-    }
+    };
   },
   props: {
     skill: Object
@@ -35,22 +35,22 @@ export default {
     ...mapActions("skills", ["removeSkill"]),
     ...mapActions("tooltips", ["showTooltip"]),
     async removeExistedSkill() {
-      this.blocked = true
+      if (confirm("удалить запись?") === false) return;
+      this.blocked = true;
       try {
         const { data } = await this.removeSkill(this.skill.id);
 
         this.showTooltip({
-          type: 'success',
+          type: "success",
           text: data.message
-        })
-
+        });
       } catch (error) {
         this.showTooltip({
-          type: 'error',
+          type: "error",
           text: error.message
-        })
+        });
       } finally {
-        this.blocked = false
+        this.blocked = false;
       }
     }
   }
@@ -61,7 +61,7 @@ export default {
 <style lang="postcss" scoped>
 .skills-row-wrapper {
   &.blocked {
-    opacity: .5;
+    opacity: 0.5;
     pointer-events: none;
     filter: grayscale(100%);
   }
