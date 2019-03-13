@@ -8,6 +8,7 @@
               placeholder="Название новой группы"
               :value="value"
               @input="$emit('input', $event)"
+              @keydown.native.enter="$emit('approve')"
               no-side-paddings
             )
           .skills-card-title__buttons

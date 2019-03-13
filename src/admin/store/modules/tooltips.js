@@ -15,7 +15,7 @@ export default {
       const availableTypeOptions = ["success", "warning", "error"];
 
       if (availableTypeOptions.includes(payload.type) === false) {
-        throw new Error("Передан не допустимый тип для тултипов");
+        console.warn("Передан не допустимый тип для тултипов");
       }
 
       commit("SET_TYPE", payload.type);

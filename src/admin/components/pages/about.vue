@@ -7,15 +7,18 @@
         @click="showAddingCard = true"
       ) Добавить группу
     ul.skill-list
-      li.skill-list__item(v-if="showAddingCard")
+      li.skill-list__item(
+        v-if="showAddingCard"
+        :class="{'loading': loading}"
+      )
         add-new-skills-group(
           v-model="title"
           @closeOrRemove="close"
           @approve="addSkillsGroup"
         )
-      li.skill-list__item(v-for="n in 4")
+      li.skill-list__item(v-for="skillsCategory in skillsCategories")
         skills-card(
-          title="Frontend"
+          :title="skillsCategory.category"
         ) 
           template(slot="content")
             table.skills
@@ -36,7 +39,7 @@
               add-new-skill
 </template>
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   components: {
     skillsCard: () => import("components/card.vue"),
@@ -51,30 +54,59 @@ export default {
       default: ""
     }
   },
+  computed: {
+    ...mapState("skills", {
+      skillsCategories: state => state.categories
+    })
+  },
   data() {
     return {
       showAddingCard: false,
+      loading: false,
       title: ""
     };
   },
+  created() {
+    this.collectCategories();
+  },
   methods: {
-    ...mapActions('skills', ['storeSkillsGroup']),
-    ...mapActions('tooltips', ['showTooltip']),
+    ...mapActions("skills", ["storeSkillsGroup", "fetchCategories"]),
+    ...mapActions("tooltips", ["showTooltip"]),
     close() {
       this.showAddingCard = false;
     },
+    async collectCategories() {
+      try {
+        this.fetchCategories();
+      } catch (error) {
+        this.showTooltip({
+          type: 'error',
+          text: error.message
+        })
+      }
+    },
     async addSkillsGroup() {
-      this.showTooltip({
-        type: 'error',
-        text: "nwe"
-      })
-      // try {
-      //   const response = await this.storeSkillsGroup({
-      //     title: this.title
-      //   })
-      // } catch (error) {
+      this.loading = true;
+      try {
+        const response = await this.storeSkillsGroup({
+          title: this.title
+        });
 
-      // }
+        this.showAddingCard = false;
+        this.fetchCategories();
+
+        this.showTooltip({
+          type: "success",
+          text: "Группа создана"
+        });
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: error.message
+        });
+      } finally {
+        this.loading = false;
+      }
     }
   }
 };
@@ -135,6 +167,12 @@ export default {
   width: calc(100% / 2 - 30px);
   margin-left: 30px;
   margin-bottom: 30px;
+
+  &.loading {
+    opacity: 0.5;
+    pointer-events: none;
+    filter: grayscale(100%);
+  }
 
   @include phones {
     width: 100%;
