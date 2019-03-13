@@ -30,7 +30,7 @@ export default {
 .tags__remove {
   width: 11px;
   height: 11px;
-  background: svg-load('remove.svg', fill=$text-color) center center no-repeat / contain;
+  background: svg-load('cross.svg', fill=$text-color) center center no-repeat / contain;
   margin-left: 9px;
 }
 

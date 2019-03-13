@@ -21,16 +21,17 @@
           :title="skillsCategory.category"
         ) 
           template(slot="content")
-            skills-table(
-              :categoryId="skillsCategory.id"
-            )
+            .skill-list__table
+              skills-table(
+                :categoryId="skillsCategory.id"
+              )
             .add-new
               add-new-skill(
                 :categoryId="skillsCategory.id"
               )
 </template>
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapMutations } from "vuex";
 export default {
   components: {
     skillsCard: () => import("components/card.vue"),
@@ -64,6 +65,7 @@ export default {
   methods: {
     ...mapActions("skills", ["storeSkillsGroup", "fetchCategories"]),
     ...mapActions("tooltips", ["showTooltip"]),
+    ...mapMutations("skills", ["ADD_SKILL_CATEGORY"]),
     close() {
       this.showAddingCard = false;
     },
@@ -85,7 +87,8 @@ export default {
         });
 
         this.showAddingCard = false;
-        this.fetchCategories();
+
+        this.ADD_SKILL_CATEGORY(response.data);
 
         this.showTooltip({
           type: "success",
@@ -172,9 +175,14 @@ export default {
   }
 }
 
+.skill-list__table {
+  margin-bottom: 40px;
+}
+
 .add-new {
   padding-left: 18%;
   position: relative;
+  margin-top: auto;
 }
 </style>
 

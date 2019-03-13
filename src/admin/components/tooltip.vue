@@ -44,7 +44,7 @@ export default {
   .tooltip__close {
     width: 20px;
     height: 20px;
-    background: svg-load('remove.svg', fill=#fff) center center no-repeat;
+    background: svg-load('cross.svg', fill=#fff) center center no-repeat;
     cursor: pointer;
     margin-left: 20px;
   }

@@ -54,6 +54,9 @@ export default {
           percent: this.skill.percent
         });
 
+        this.skill.percent = 0;
+        this.skill.title = ""
+
         this.showTooltip({
           type: 'success',
           text: 'Скилл добавлен'
