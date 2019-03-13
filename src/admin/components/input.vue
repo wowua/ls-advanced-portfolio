@@ -6,7 +6,6 @@
     .input__title(v-if="title") {{title}} 
     input(
       v-bind="$attrs"
-      type="text"
       :value="value" 
       @input="$emit('input', $event.target.value)"
     ).input__elem
@@ -31,7 +30,7 @@ export default {
       type: String,
       default: "input"
     },
-    value: String,
+    value: String | Number,
     icon: {
       type: String,
       default: "",

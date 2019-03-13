@@ -46,6 +46,7 @@ export default {
     height: 20px;
     background: svg-load('remove.svg', fill=#fff) center center no-repeat;
     cursor: pointer;
+    margin-left: 20px;
   }
 
 </style>

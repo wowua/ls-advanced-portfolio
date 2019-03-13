@@ -30,10 +30,19 @@ export default {
     async fetchSkills({ commit }) {
       try {
         const response = await this.$axios.get("/skills/1");
-        commit('SET_SKILLS_STATE', response.data)
+        commit("SET_SKILLS_STATE", response.data);
         return response;
       } catch (error) {
         throw new Error(error.response.data.error);
+      }
+    },
+    async addSkill({ commit }, payload) {
+      try {
+        const response = await this.$axios.post('/skills', payload);
+
+        console.log(response);
+      } catch (error) {
+        throw new Error(error.response.data.message);
       }
     }
   }

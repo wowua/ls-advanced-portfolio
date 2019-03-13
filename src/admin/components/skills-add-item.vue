@@ -1,27 +1,74 @@
 <template lang="pug">
   form.add-new-container(
-    :class="{'is-blocked' : blocked}"
+    :class="{'is-blocked' : blocked || loading}"
+    @submit.prevent="addNewSkill"
   )
     .add-new__inputs
       .add-new__col
         app-input(
           placeholder="Новый навык"
+          v-model="skill.title"
         )
       .add-new__col.add-new__col_small
-        app-input
+        app-input(
+          type="number"
+          min="0"
+          max="100"
+          maxlength="3" 
+          v-model="skill.percent"
+        )
     button(type="submit" data-text="+").add-new__button
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   props: {
     blocked: {
       type: Boolean,
       default: false
-    }
+    },
+    categoryId: Number
+  },
+  data() {
+    return {
+      loading: false,
+      skill: {
+        title: "",
+        percent: 0
+      }
+    };
   },
   components: {
     appInput: () => import("components/input.vue")
+  },
+  methods: {
+    ...mapActions("skills", ["addSkill"]),
+    ...mapActions("tooltips", ["showTooltip"]),
+    async addNewSkill() {
+      this.loading = true
+      try {
+        const response = await this.addSkill({
+          category: this.categoryId,
+          title: this.skill.title,
+          percent: this.skill.percent
+        });
+
+        this.showTooltip({
+          type: 'success',
+          text: 'Скилл добавлен'
+        })
+
+      } catch (error) {
+        this.showTooltip({
+          type: 'error',
+          text: error.message
+        })
+
+      } finally {
+        this.loading = false
+      }
+    }
   }
 };
 </script>

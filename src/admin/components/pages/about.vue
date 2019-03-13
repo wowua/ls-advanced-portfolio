@@ -25,7 +25,9 @@
               :categoryId="skillsCategory.id"
             )
             .add-new
-              add-new-skill
+              add-new-skill(
+                :categoryId="skillsCategory.id"
+              )
 </template>
 <script>
 import { mapActions, mapState } from "vuex";
