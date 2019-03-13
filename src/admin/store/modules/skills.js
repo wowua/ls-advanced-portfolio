@@ -6,8 +6,18 @@ export default {
   },
   mutations: {
     SET_SKILLS_CATEGORIES: (state, skills) => (state.categories = skills),
-    ADD_SKILL_CATEGORY: (state, skillCategory) => {
+    ADD_SKILLS_CATEGORY: (state, skillCategory) => {
       state.categories.unshift(skillCategory);
+    },
+    UPDATE_SKILLS_CATEGORY: (state, changedCategory) => {
+      state.categories = state.categories.map(category => {
+        return category.id === changedCategory.id ? changedCategory : category;
+      });
+    },
+    REMOVE_SKILLS_CATEGORY: (state, removedCategoryId) => {
+      state.categories = state.categories.filter(
+        category => category.id !== removedCategoryId
+      );
     },
     SET_SKILLS_STATE: (state, skills) => (state.skills = skills),
     ADD_NEW_SKILL: (state, skill) => state.skills.push(skill),
@@ -16,13 +26,37 @@ export default {
     }
   },
   actions: {
-    async storeSkillsGroup(store, categoryName) {
+    async storeSkillsGroup({ commit }, categoryName) {
       try {
         const response = await this.$axios.post("/categories", categoryName);
 
+        commit("ADD_SKILLS_CATEGORY", response.data);
         return response;
       } catch (error) {
         throw new Error(error.response.data.error);
+      }
+    },
+    async updateSkillsGroup({ commit }, payload) {
+      try {
+        const response = await this.$axios.post(
+          `/categories/${payload.id}`,
+          payload
+        );
+
+        commit("UPDATE_SKILLS_CATEGORY", response.data.category);
+
+        return response;
+      } catch (error) {
+        throw new Error(error.response.data.message);
+      }
+    },
+    async removeSkillsGroup({ commit }, categoryId) {
+      try {
+        const response = await this.$axios.delete(`/categories/${categoryId}`);
+        commit("REMOVE_SKILLS_CATEGORY", categoryId);
+        return response;
+      } catch (error) {
+        throw new Error(error.response.data.message);
       }
     },
     async fetchCategories({ commit }) {

@@ -17,9 +17,11 @@
           @approve="addSkillsGroup"
         )
       li.skill-list__item(v-for="skillsCategory in skillsCategories")
-        skills-card(
-          :title="skillsCategory.category"
-        ) 
+        skills-card 
+          template(slot="title")
+            skills-title(
+              :categoryData="skillsCategory"
+            )
           template(slot="content")
             .skill-list__table
               skills-table(
@@ -36,10 +38,10 @@ export default {
   components: {
     skillsCard: () => import("components/card.vue"),
     appInput: () => import("components/input.vue"),
-    iconedBtn: () => import("components/iconed-btn.vue"),
     addNewSkillsGroup: () => import("components/skills-add-group.vue"),
     addNewSkill: () => import("components/skills-add-item.vue"),
-    skillsTable: () => import("components/skills-items.vue")
+    skillsTable: () => import("components/skills-items.vue"),
+    skillsTitle: () => import("components/skills-title.vue")
   },
   props: {
     pageTitle: {
@@ -56,7 +58,7 @@ export default {
     return {
       showAddingCard: false,
       loading: false,
-      title: ""
+      title: "",
     };
   },
   created() {
@@ -65,9 +67,10 @@ export default {
   methods: {
     ...mapActions("skills", ["storeSkillsGroup", "fetchCategories"]),
     ...mapActions("tooltips", ["showTooltip"]),
-    ...mapMutations("skills", ["ADD_SKILL_CATEGORY"]),
+    ...mapMutations("skills", ["ADD_SKILLS_CATEGORY"]),
     close() {
       this.showAddingCard = false;
+      this.title = "";
     },
     async collectCategories() {
       try {
@@ -87,8 +90,6 @@ export default {
         });
 
         this.showAddingCard = false;
-
-        this.ADD_SKILL_CATEGORY(response.data);
 
         this.showTooltip({
           type: "success",

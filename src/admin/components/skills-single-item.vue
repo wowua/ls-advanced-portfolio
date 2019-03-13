@@ -36,6 +36,7 @@ export default {
     ...mapActions("tooltips", ["showTooltip"]),
     async removeExistedSkill() {
       if (confirm("удалить запись?") === false) return;
+
       this.blocked = true;
       try {
         const { data } = await this.removeSkill(this.skill.id);
