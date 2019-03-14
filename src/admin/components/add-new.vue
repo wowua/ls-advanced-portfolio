@@ -1,6 +1,7 @@
 <template lang="pug">
   button(
     type="button"
+    v-on="$listeners"
   ).btn-container
     .btn__text
       .btn__sign

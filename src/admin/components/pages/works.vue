@@ -2,36 +2,72 @@
   .works-section
     h1.page-title {{pageTitle}}
     .works-container
-      .edit-form
+      .edit-form(
+        v-if="showForm"
+      )
         card(
-          title="Редактирование работы"
+          :title="editFormTitle"
         )
-          div(slot="content").edit-form__container
-            .edit-form__col
-              .edit-form__pic
-                img(src="~images/content/slider-1.jpg").edit-form__img
-              .edit-form__btn
-                a.edit-form__change-pic Изменить превью
-            .edit-form__col
-              .edit-form__row
-                app-input(
-                  title="Название"
+          template(slot="content")
+            .edit-form__container
+              .edit-form__col
+
+                .edit-form__btn(
+                  v-if="renderedPhoto.length"
                 )
-              .edit-form__row
-                app-input(
-                  title="Ссылка"
+                  .edit-form__pic(
+                    :style="{'backgroundImage' : renderedPhoto}"
+                  )
+                  label.edit-form__change-preview
+                    a.edit-form__change-pic Изменить превью
+                    input(type="file" @change="handlePhotoUpload").edit-form__preview-input
+
+                label.edit-from__picture(v-else)
+                  .edit-form__picture-text
+                    | Перетащите либо загрузите изображения
+                  app-button(
+                    elem="file"
+                    text="Загрузить"
+                    @change="handlePhotoUpload"
+                  )
+
+              .edit-form__col
+                .edit-form__row
+                  app-input(
+                    title="Название"
+                    v-model="newWork.title"
+                  )
+                .edit-form__row
+                  app-input(
+                    title="Ссылка"
+                    v-model="newWork.link"
+                  )
+                .edit-form__row
+                  app-input(
+                    title="Описание"
+                    fieldType="textarea"
+                  )
+                .edit-form__row
+                  add-tags(
+                    @addingTags="value => this.newWork.techs = value"
+                  )
+            .edit-form__buttons
+              .edit-form__buttons-item
+                app-button(
+                  text="Отмена"
+                  class="plain"
                 )
-              .edit-form__row
-                app-input(
-                  title="Описание"
-                  fieldType="textarea"
+              .edit-form__buttons-item
+                app-button(
+                  text="Загрузить"
+                  @click="addNewWork"
                 )
-              .edit-form__row
-                add-tags
 
       ul.works
         li.works__item
-          add-new
+          add-new(
+            @click="showForm = true"
+          )
         li.works__item(v-for="n in 5")
           card(plain)
             .works__pic
@@ -58,6 +94,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   props: {
     pageTitle: {
@@ -71,7 +108,60 @@ export default {
     tags: () => import("components/tags.vue"),
     addNew: () => import("components/add-new.vue"),
     appInput: () => import("components/input.vue"),
-    addTags: () => import("components/add-tags.vue")
+    addTags: () => import("components/add-tags.vue"),
+    appButton: () => import("components/button.vue")
+  },
+  data() {
+    return {
+      showForm: true,
+      mode: "add",
+      renderedPhoto: "",
+      newWork: {
+        title: "",
+        techs: "",
+        link: "",
+        photo: ""
+      }
+    };
+  },
+  computed: {
+    editFormTitle() {
+      switch (this.mode) {
+        case "edit":
+          return "Редактирование работы";
+        case "add":
+          return "Добавление работы";
+      }
+    }
+  },
+  methods: {
+    ...mapActions("works", ["storeWork"]),
+    ...mapActions("tooltips", ["showTooltip"]),
+    async addNewWork() {
+      try {
+        const response = await this.storeWork(this.newWork);
+        this.showTooltip({
+          text: "Работа создана",
+          type: "success"
+        });
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: error.message
+        });
+      }
+    },
+    handlePhotoUpload(e) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+
+      this.newWork.photo = file;
+
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        this.renderedPhoto = `url(${reader.result})`;
+      };
+    }
   }
 };
 </script>
@@ -99,9 +189,43 @@ export default {
   }
 }
 
+.edit-form__buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-form__buttons-item {
+  margin-right: 20px;
+
+  &:last-child {
+    margin-right: 0px;
+  }
+}
+
 .edit-form__change-pic {
   color: #383bcf;
   font-weight: 600;
+}
+
+.edit-from__picture {
+  display: block;
+  min-height: 276px;
+  border: dashed 1px #a1a1a1;
+  background-color: #dee4ed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 24%;
+  cursor: pointer;
+}
+
+.edit-form__picture-text {
+  margin-bottom: 22px;
+  color: rgba(65, 76, 99, 0.5);
+  line-height: 2.12;
+  font-weight: 600;
+  text-align: center;
 }
 
 .edit-form__btn {
@@ -111,8 +235,18 @@ export default {
 .edit-form__pic {
   margin-bottom: 30px;
   height: 260px;
+  background: center center no-repeat / cover;
 }
 
+.edit-form__change-preview {
+  position: relative;
+}
+
+.edit-form__preview-input {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+}
 
 .edit-form__img {
   object-fit: cover;

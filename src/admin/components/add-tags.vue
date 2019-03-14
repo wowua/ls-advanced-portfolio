@@ -4,6 +4,7 @@
       app-input(
         title="Добавление тега"
         v-model="tags"
+        @input='$emit("addingTags", $event)'
       )
     tags(
       :tags="tagsArray"
@@ -36,6 +37,8 @@ export default {
       tagsArray.splice(index, 1);
 
       this.tags = tagsArray.join(",");
+
+      this.$emit('addingTags', this.tags);
     }
   }
 };
