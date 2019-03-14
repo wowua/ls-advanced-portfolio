@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       editmode: false,
-      newTitle: "",
+      newTitle: this.categoryData.category,
       blocked: false
     };
   },
@@ -63,7 +63,7 @@ export default {
       }
     },
     async removeCategory() {
-      if (confirm('Удалить группу?') === false) return;
+      if (confirm("Удалить группу?") === false) return;
 
       this.editmode = false;
 
@@ -72,20 +72,14 @@ export default {
         this.showTooltip({
           type: "success",
           text: "Категория удалена"
-        })
+        });
       } catch (error) {
         this.showTooltip({
           type: "error",
           text: error.message
-        })
+        });
       }
     }
-  },
-  created() {
-    this.newTitle = this.categoryData.category;
-  },
-  updated() {
-    this.newTitle = this.categoryData.category;
   }
 };
 </script>
