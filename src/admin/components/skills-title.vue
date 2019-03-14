@@ -83,6 +83,9 @@ export default {
   },
   created() {
     this.newTitle = this.categoryData.category;
+  },
+  updated() {
+    this.newTitle = this.categoryData.category;
   }
 };
 </script>

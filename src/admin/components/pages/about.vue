@@ -74,7 +74,7 @@ export default {
     },
     async collectCategories() {
       try {
-        this.fetchCategories();
+        await this.fetchCategories();
       } catch (error) {
         this.showTooltip({
           type: "error",
@@ -90,6 +90,7 @@ export default {
         });
 
         this.showAddingCard = false;
+        this.title = "";
 
         this.showTooltip({
           type: "success",

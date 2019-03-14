@@ -23,6 +23,11 @@ export default {
     ADD_NEW_SKILL: (state, skill) => state.skills.push(skill),
     REMOVE_SKILL: (state, removedSkillId) => {
       state.skills = state.skills.filter(skill => skill.id !== removedSkillId);
+    },
+    UPDATE_SKILL: (state, updatedSkill) => {
+      state.skills = state.skills.map(skill => {
+        return skill.id === updatedSkill.id ? updatedSkill : skill;
+      });
     }
   },
   actions: {
@@ -90,6 +95,20 @@ export default {
         const response = await this.$axios.delete(`/skills/${skillId}`);
 
         commit("REMOVE_SKILL", skillId);
+
+        return response;
+      } catch (error) {
+        throw new Error(error.response.data.message);
+      }
+    },
+    async updateSkill({ commit }, payload) {
+      try {
+        const response = await this.$axios.post(
+          `/skills/${payload.id}`,
+          payload
+        );
+
+        commit("UPDATE_SKILL", response.data.skill);
 
         return response;
       } catch (error) {

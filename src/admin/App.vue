@@ -1,5 +1,5 @@
 <template lang="pug">
-  div
+  div.root-wrapper-container
     div.root-container
       template(v-if="$route.meta.public")
         router-view
@@ -52,6 +52,10 @@ export default {
 @import "normalize.css";
 @import "../styles/mixins.pcss";
 @import "../styles/layout/base.pcss";
+
+.root-wrapper-container {
+  height: 100%;
+}
 
 .header-container {
   background: linear-gradient(to right, #3e3e59, #454573);
