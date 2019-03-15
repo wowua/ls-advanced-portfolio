@@ -5,7 +5,10 @@ export default {
   },
   mutations: {
     SET_WORKS: (state, works) => (state.works = works),
-    ADD_WORK: (state, work) => state.works.push(work)
+    ADD_WORK: (state, work) => state.works.push(work),
+    REMOVE_WORK: (state, removedWorkId) => {
+      state.works = state.works.filter(work => work.id !== removedWorkId);
+    }
   },
   actions: {
     async storeWork({ commit }, payload) {
@@ -22,6 +25,15 @@ export default {
       try {
         const response = await this.$axios.get(`/works/1`);
         commit("SET_WORKS", response.data);
+        return response;
+      } catch (error) {
+        throw new Error(error.response.data.message);
+      }
+    },
+    async removeWork({ commit }, workId) {
+      try {
+        const response = await this.$axios.delete(`/works/${workId}`);
+        commit("REMOVE_WORK", workId);
         return response;
       } catch (error) {
         throw new Error(error.response.data.message);

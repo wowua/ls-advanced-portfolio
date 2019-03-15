@@ -22,11 +22,13 @@
           iconedBtn(
             class="is-cross"
             data-text="Удалить"
+            @click="removeExistedWork"
           )
 </template>
 
 <script>
-import requests from '@/requests';
+import requests from "@/requests";
+import { mapActions } from "vuex";
 
 export default {
   components: {
@@ -39,13 +41,32 @@ export default {
   },
   computed: {
     baseUrl() {
-      return requests.defaults.baseURL
+      return requests.defaults.baseURL;
     },
     imagePath() {
-      return `${this.baseUrl}/${this.work.photo}`
+      return `${this.baseUrl}/${this.work.photo}`;
     },
     tagsArray() {
-      return this.work.techs.split(',')
+      return this.work.techs.split(",");
+    }
+  },
+  methods: {
+    ...mapActions("works", ["removeWork"]),
+    ...mapActions("tooltips", ["showTooltip"]),
+    async removeExistedWork() {
+      try {
+        const response = await this.removeWork(this.work.id);
+
+        this.showTooltip({
+          type: "success",
+          text: "Работа удалена"
+        })
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: error.message
+        })
+      } 
     }
   }
 };
