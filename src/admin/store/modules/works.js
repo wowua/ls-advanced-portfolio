@@ -9,7 +9,7 @@ export default {
 
         return response;
       } catch (error) {
-        throw new Error(error.response.data.message);
+        // throw new Error(error.response.data.message);
       }
     }
   }
@@ -19,8 +19,6 @@ function wrapIntoFormData(plainObject) {
   const formData = new FormData();
 
   Object.keys(plainObject).forEach(key => {
-    console.log(key, plainObject[key]);
-
     formData.append(key, plainObject[key]);
   });
 
