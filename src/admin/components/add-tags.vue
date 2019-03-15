@@ -3,8 +3,8 @@
     .add-tags__wrapper
       app-input(
         title="Добавление тега"
-        v-model="tags"
-        @input='$emit("addingTags", $event)'
+        :value="tags"
+        @input="handleInput"
       )
     tags(
       :tags="tagsArray"
@@ -19,26 +19,38 @@ export default {
     appInput: () => import("./input.vue"),
     tags: () => import("./tags.vue")
   },
+  props: {
+    value: String
+  },
   data() {
     return {
-      tags: ""
+      tagsString: this.value
     };
   },
   computed: {
     tagsArray() {
       if (!!this.tags.length === false) return [];
-
       return this.tags.split(",");
+    },
+    tags: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.tagsString = value;
+      }
     }
   },
   methods: {
+    handleInput($event) {
+      this.$emit("input", $event);
+      this.tags = $event;
+    },
     removeTag(index) {
       const tagsArray = [...this.tagsArray];
       tagsArray.splice(index, 1);
 
-      this.tags = tagsArray.join(",");
-
-      this.$emit('addingTags', this.tags);
+      this.$emit("removeTag", tagsArray.join(","));
     }
   }
 };
