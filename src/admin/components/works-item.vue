@@ -100,11 +100,11 @@ export default {
   font-weight: 600;
   color: #383bcf;
   margin-bottom: 44px;
+  margin-top: auto;
 }
 
 .works__btns {
   display: flex;
   justify-content: space-between;
-  margin-top: auto;
 }
 </style>

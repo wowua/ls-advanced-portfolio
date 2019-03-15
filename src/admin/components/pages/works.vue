@@ -5,7 +5,7 @@
       add-new-work-form(
         v-if="showForm"
         :mode="mode"
-        @cancel="showForm = false"
+        @closeForm="showForm = false"
       )
       ul.works
         li.works__item

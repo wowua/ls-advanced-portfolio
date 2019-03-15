@@ -4,26 +4,27 @@ export default {
     works: []
   },
   mutations: {
-    SET_WORKS: (state, works) => state.works = works 
+    SET_WORKS: (state, works) => (state.works = works),
+    ADD_WORK: (state, work) => state.works.push(work)
   },
   actions: {
     async storeWork({ commit }, payload) {
       const data = wrapIntoFormData(payload);
       try {
         const response = await this.$axios.post("/works", data);
-
+        commit("ADD_WORK", response.data);
         return response;
       } catch (error) {
         throw new Error(error.response.data.message);
       }
     },
-    async fetchWorks({commit}) {
+    async fetchWorks({ commit }) {
       try {
         const response = await this.$axios.get(`/works/1`);
-        commit('SET_WORKS', response.data);
+        commit("SET_WORKS", response.data);
         return response;
       } catch (error) {
-        throw new Error(error.response.data.message); 
+        throw new Error(error.response.data.message);
       }
     }
   }

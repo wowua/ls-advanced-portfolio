@@ -115,6 +115,8 @@ export default {
       try {
         const response = await this.storeWork(this.newWork);
 
+        this.$emit('closeForm');
+
         this.clearFormFields();
 
         this.showTooltip({
@@ -132,7 +134,7 @@ export default {
     },
     cancelAdding() {
       this.clearFormFields();
-      this.$emit("cancel");
+      this.$emit("closeForm");
     },
     clearFormFields() {
       Object.keys(this.newWork).forEach(key => {
