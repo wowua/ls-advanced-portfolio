@@ -66,6 +66,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { renderer } from "@/helpers/pictures";
 
 export default {
   props: {
@@ -115,8 +116,7 @@ export default {
       try {
         const response = await this.storeWork(this.newWork);
 
-        this.$emit('closeForm');
-
+        this.$emit("closeForm");
         this.clearFormFields();
 
         this.showTooltip({
@@ -142,16 +142,19 @@ export default {
       });
       this.renderedPhoto = "";
     },
-    handlePhotoUpload(e) {
+    async handlePhotoUpload(e) {
       const file = e.target.files[0];
-      const reader = new FileReader();
-
       this.newWork.photo = file;
 
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        this.renderedPhoto = `url(${reader.result})`;
-      };
+      try {
+        const rendererResult = await renderer(file);
+        this.renderedPhoto = `url(${rendererResult})`;
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: error.message
+        });
+      }
     }
   }
 };
