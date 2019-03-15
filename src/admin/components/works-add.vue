@@ -53,11 +53,13 @@
             app-button(
               text="Отмена"
               class="plain"
+              @click="cancelAdding"
             )
           .edit-form__buttons-item
             app-button(
               text="Загрузить"
               @click="addNewWork"
+              :disabled="disabled"
             )
 
 </template>
@@ -71,6 +73,10 @@ export default {
       type: String,
       default: "add",
       validator: value => ["add", "edit"].includes(value)
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -84,7 +90,7 @@ export default {
       renderedPhoto: "",
       newWork: {
         title: "",
-        techs: "one, two, three",
+        techs: "",
         link: "",
         photo: "",
         description: ""
@@ -105,8 +111,9 @@ export default {
     ...mapActions("works", ["storeWork"]),
     ...mapActions("tooltips", ["showTooltip"]),
     async addNewWork() {
+      this.disabled = true;
       try {
-        // const response = await this.storeWork(this.newWork);
+        const response = await this.storeWork(this.newWork);
 
         this.clearFormFields();
 
@@ -119,12 +126,19 @@ export default {
           type: "error",
           text: error.message
         });
+      } finally {
+        this.disabled = false;
       }
+    },
+    cancelAdding() {
+      this.clearFormFields();
+      this.$emit("cancel");
     },
     clearFormFields() {
       Object.keys(this.newWork).forEach(key => {
         this.newWork[key] = "";
       });
+      this.renderedPhoto = "";
     },
     handlePhotoUpload(e) {
       const file = e.target.files[0];

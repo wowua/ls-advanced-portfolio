@@ -1,0 +1,110 @@
+<template lang="pug">
+  card(plain)
+    .works-wrapper
+      .works__pic
+        img(
+          :src="imagePath"
+        ).works__image
+        .works__tag
+          tags(
+            :tags="tagsArray"
+          )
+      .works__data
+        .works__title {{work.title}}
+        .works__text
+          p {{work.description}}
+        a.works__link {{work.link}}
+        .works__btns
+          iconedBtn(
+            class="is-pencil"
+            data-text="Править"
+          )
+          iconedBtn(
+            class="is-cross"
+            data-text="Удалить"
+          )
+</template>
+
+<script>
+import requests from '@/requests';
+
+export default {
+  components: {
+    iconedBtn: () => import("components/iconed-btn.vue"),
+    tags: () => import("components/tags.vue"),
+    card: () => import("components/card.vue")
+  },
+  props: {
+    work: Object
+  },
+  computed: {
+    baseUrl() {
+      return requests.defaults.baseURL
+    },
+    imagePath() {
+      return `${this.baseUrl}/${this.work.photo}`
+    },
+    tagsArray() {
+      return this.work.techs.split(',')
+    }
+  }
+};
+</script>
+
+<style lang="postcss" scoped>
+.works-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.works__pic {
+  height: 190px;
+  position: relative;
+}
+
+.works__tag {
+  position: absolute;
+  bottom: 2px;
+  right: 0;
+}
+
+.works__image {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.works__data {
+  padding: 40px 30px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.works__title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.works__text {
+  font-weight: 600;
+  line-height: 1.88;
+  color: rgba(65, 76, 99, 0.5);
+  margin-bottom: 20px;
+}
+
+.works__link {
+  display: block;
+  font-weight: 600;
+  color: #383bcf;
+  margin-bottom: 44px;
+}
+
+.works__btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}
+</style>
