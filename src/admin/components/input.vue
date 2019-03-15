@@ -13,11 +13,12 @@
   label.textarea(
     v-else-if="fieldType === 'textarea'"
     v-bind="$attrs"
-    :value="value"
-    @input="$emit('input', $event.target.value)"
   )
     .input__title(v-if="title") {{title}} 
-    textarea.textarea__elem
+    textarea.textarea__elem(
+      :value="value"
+      @input="$emit('input', $event.target.value)"
+    )
 </template>
 
 <script>
