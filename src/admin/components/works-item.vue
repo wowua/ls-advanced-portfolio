@@ -30,6 +30,7 @@
 <script>
 import requests from "@/requests";
 import { mapActions, mapMutations } from "vuex";
+import { getAbsoluteImgPath } from "@/helpers/pictures";
 
 export default {
   components: {
@@ -41,11 +42,8 @@ export default {
     work: Object
   },
   computed: {
-    baseUrl() {
-      return requests.defaults.baseURL;
-    },
     imagePath() {
-      return `${this.baseUrl}/${this.work.photo}`;
+      return getAbsoluteImgPath(this.work.photo)
     },
     tagsArray() {
       return this.work.techs.split(",");
@@ -57,7 +55,7 @@ export default {
     ...mapMutations("works", ["SET_CURRENT_WORK"]),
     updateWork() {
       this.SET_CURRENT_WORK(this.work.id);
-      this.$emit('updateWork');
+      this.$emit("updateWork");
     },
     async removeExistedWork() {
       try {
