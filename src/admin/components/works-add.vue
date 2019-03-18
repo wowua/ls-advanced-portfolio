@@ -11,7 +11,7 @@
               v-if="renderedPhoto.length"
             )
               .edit-form__pic(
-                :style="{'backgroundImage' : renderedPhoto}"
+                :style="{'backgroundImage' : workPhotoUrl}"
               )
               label.edit-form__change-preview
                 a.edit-form__change-pic Изменить превью
@@ -30,23 +30,23 @@
             .edit-form__row
               app-input(
                 title="Название"
-                v-model="newWork.title"
+                v-model="work.title"
               )
             .edit-form__row
               app-input(
                 title="Ссылка"
-                v-model="newWork.link"
+                v-model="work.link"
               )
             .edit-form__row
               app-input(
                 title="Описание"
                 fieldType="textarea"
-                v-model="newWork.description"
+                v-model="work.description"
               )
             .edit-form__row
               add-tags(
-                v-model="newWork.techs"
-                @removeTag="value => this.newWork.techs = value"
+                v-model="work.techs"
+                @removeTag="value => this.work.techs = value"
               )
         .edit-form__buttons
           .edit-form__buttons-item
@@ -56,17 +56,18 @@
               @click="cancelAdding"
             )
           .edit-form__buttons-item
+            pre {{mode}}
             app-button(
               text="Загрузить"
-              @click="addNewWork"
+              @click="mode === 'add' ? addNewWork() : editWork()"
               :disabled="disabled"
             )
 
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import { renderer } from "@/helpers/pictures";
+import { mapActions, mapState } from "vuex";
+import { renderer, getAbsoluteImgPath } from "@/helpers/pictures";
 
 export default {
   props: {
@@ -89,7 +90,8 @@ export default {
   data() {
     return {
       renderedPhoto: "",
-      newWork: {
+      work: {
+        id: 0,
         title: "",
         techs: "",
         link: "",
@@ -99,6 +101,12 @@ export default {
     };
   },
   computed: {
+    ...mapState("works", {
+      currentWork: state => state.currentWork
+    }),
+    workPhotoUrl() {
+      return `url(${this.renderedPhoto})`;
+    },
     editFormTitle() {
       switch (this.mode) {
         case "edit":
@@ -108,13 +116,33 @@ export default {
       }
     }
   },
+  created() {
+    if (this.mode === "edit") {
+      this.fillFormWithCurrentWorkData();
+    }
+  },
+  watch: {
+    currentWork(value) {
+      if (this.mode === "edit") {
+        this.fillFormWithCurrentWorkData();
+      }
+    },
+    mode(value) {
+      if (value === 'add') {
+        this.clearFormFields();
+      }
+    }
+  },
   methods: {
-    ...mapActions("works", ["storeWork"]),
+    ...mapActions("works", ["storeWork", "updateWork"]),
     ...mapActions("tooltips", ["showTooltip"]),
+    async editWork() {
+      this.updateWork(this.work);
+    },
     async addNewWork() {
       this.disabled = true;
       try {
-        const response = await this.storeWork(this.newWork);
+        const response = await this.storeWork(this.work);
 
         this.$emit("closeForm");
         this.clearFormFields();
@@ -137,18 +165,24 @@ export default {
       this.$emit("closeForm");
     },
     clearFormFields() {
-      Object.keys(this.newWork).forEach(key => {
-        this.newWork[key] = "";
+      Object.keys(this.work).forEach(key => {
+        this.work[key] = "";
       });
       this.renderedPhoto = "";
     },
+    fillFormWithCurrentWorkData() {
+      Object.keys(this.work).forEach(key => {
+        this.work[key] = this.currentWork[key];
+      });
+      this.renderedPhoto = getAbsoluteImgPath(this.currentWork.photo);
+    },
     async handlePhotoUpload(e) {
       const file = e.target.files[0];
-      this.newWork.photo = file;
+      this.work.photo = file;
 
       try {
         const rendererResult = await renderer(file);
-        this.renderedPhoto = `url(${rendererResult})`;
+        this.renderedPhoto = rendererResult;
       } catch (error) {
         this.showTooltip({
           type: "error",

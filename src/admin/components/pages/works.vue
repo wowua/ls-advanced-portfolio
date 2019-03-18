@@ -10,11 +10,12 @@
       ul.works
         li.works__item
           add-new-button(
-            @click="addNewWork"
+            @click="openAddingForm"
           )
         li.works__item(v-for="work in works")
           works-item(
             :work="work"
+            @updateWork="updateWork"
           )
             
 </template>
@@ -44,26 +45,30 @@ export default {
     };
   },
   computed: {
-    ...mapState('works', {
+    ...mapState("works", {
       works: state => state.works
     })
   },
   methods: {
-    ...mapActions('works', ['fetchWorks']),
-    ...mapActions('tooltips', ['showTooltip']),
-    addNewWork() {
-      this.showForm = true,
-      this.mode = "add"
+    ...mapActions("works", ["fetchWorks"]),
+    ...mapActions("tooltips", ["showTooltip"]),
+    openAddingForm() {
+      this.showForm = true;
+      this.mode = "add";
     },
     async collectWorks() {
       try {
-        await this.fetchWorks(); 
+        await this.fetchWorks();
       } catch (error) {
         this.showTooltip({
           type: "error",
           text: "Ошибка при загрузке работ"
-        })
+        });
       }
+    },
+    updateWork() {
+      this.mode = "edit";
+      this.showForm = true;
     }
   },
   created() {

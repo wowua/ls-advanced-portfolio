@@ -18,6 +18,7 @@
           iconedBtn(
             class="is-pencil"
             data-text="Править"
+            @click="updateWork"
           )
           iconedBtn(
             class="is-cross"
@@ -28,7 +29,7 @@
 
 <script>
 import requests from "@/requests";
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
   components: {
@@ -53,6 +54,11 @@ export default {
   methods: {
     ...mapActions("works", ["removeWork"]),
     ...mapActions("tooltips", ["showTooltip"]),
+    ...mapMutations("works", ["SET_CURRENT_WORK"]),
+    updateWork() {
+      this.SET_CURRENT_WORK(this.work.id);
+      this.$emit('updateWork');
+    },
     async removeExistedWork() {
       try {
         const response = await this.removeWork(this.work.id);
@@ -60,13 +66,13 @@ export default {
         this.showTooltip({
           type: "success",
           text: "Работа удалена"
-        })
+        });
       } catch (error) {
         this.showTooltip({
           type: "error",
           text: error.message
-        })
-      } 
+        });
+      }
     }
   }
 };
