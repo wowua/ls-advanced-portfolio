@@ -2,32 +2,8 @@
   .reviews-section
     h1.page-title {{pageTitle}}
     .reviews-container
-      .reviews__form
-        card(
-          title="Новый отзыв"
-        )
-          div(slot="content").reviews__form-content
-            .reviews__form-userpic
-              .reviews__form-pic
-                img(src="~images/content/user.jpg").reviews__form-avatar
-              .reviews__form-addphoto Добавить фото
-            .reviews__form-col
-              .reviews__form-row
-                .reviews__form-block
-                  app-input(
-                    title="Имя автора"
-                  )
-                .reviews__form-block
-                  app-input(
-                    title="Титул автора"
-                  )
-              .reviews__form-row
-                .reviews__form-block
-                  app-input(
-                    title="Отзыв"
-                    type="textarea"
-                  )
-          
+      .reviews__form    
+        add-new-review
       ul.reviews
         li.reviews__item
           add-new
@@ -62,7 +38,7 @@ export default {
     addNew: () => import("components/add-new.vue"),
     user: () => import("components/user.vue"),
     iconedBtn: () => import("components/iconed-btn.vue"),
-    appInput: () => import("components/input.vue")
+    addNewReview: () => import("components/reviews-add.vue")
   }
 };
 </script>
@@ -73,47 +49,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
   margin-left: -30px;
-}
-
-.reviews__form-content {
-  display: flex;
-  padding-right: 20%;
-}
-
-.reviews__form-row {
-  display: flex;
-  margin-bottom: 40px;
-}
-.reviews__form-col {
-  flex: 1;
-}
-
-.reviews__form-block {
-  flex: 1;
-  margin-right: 30px;
-
-  &:last-child {
-    margin-right: 0;
-  }
-}
-.reviews__form-addphoto {
-  color: #383bcf;
-  font-weight: 600;
-}
-
-.reviews__form-pic {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-bottom: 27px;
-}
-
-.reviews__form-userpic {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-right: 30px;
 }
 
 .reviews__item {
