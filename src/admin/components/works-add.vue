@@ -1,68 +1,54 @@
 <template lang="pug">
-  .edit-form
-    card(
-      :title="editFormTitle"
-    )
-      template(slot="content")
-        .edit-form__container
-          .edit-form__col
-
-            .edit-form__btn(
-              v-if="renderedPhoto.length"
+  adding-form(
+    :title="editFormTitle"
+    @cancel="cancelAdding"
+    @submit="mode === 'add' ? addNewWork() : editWork()",
+    :disabled="disableForm"
+  )
+    template(slot="form-content")
+      .edit-form__container
+        .edit-form__col
+          .edit-form__btn(
+            v-if="renderedPhoto.length"
+          )
+            .edit-form__pic(
+              :style="{'backgroundImage' : workPhotoUrl}"
             )
-              .edit-form__pic(
-                :style="{'backgroundImage' : workPhotoUrl}"
-              )
-              label.edit-form__change-preview
-                a.edit-form__change-pic Изменить превью
-                input(type="file" @change="handlePhotoUpload").edit-form__preview-input
+            label.edit-form__change-preview
+              a.edit-form__change-pic Изменить превью
+              input(type="file" @change="handlePhotoUpload").edit-form__preview-input
 
-            label.edit-from__picture(v-else)
-              .edit-form__picture-text
-                | Перетащите либо загрузите изображения
-              app-button(
-                elem="file"
-                text="Загрузить"
-                @change="handlePhotoUpload"
-              )
-
-          .edit-form__col
-            .edit-form__row
-              app-input(
-                title="Название"
-                v-model="work.title"
-              )
-            .edit-form__row
-              app-input(
-                title="Ссылка"
-                v-model="work.link"
-              )
-            .edit-form__row
-              app-input(
-                title="Описание"
-                fieldType="textarea"
-                v-model="work.description"
-              )
-            .edit-form__row
-              add-tags(
-                v-model="work.techs"
-                @removeTag="value => this.work.techs = value"
-              )
-        .edit-form__buttons
-          .edit-form__buttons-item
+          label.edit-from__picture(v-else)
+            .edit-form__picture-text
+              | Перетащите либо загрузите изображения
             app-button(
-              text="Отмена"
-              class="plain"
-              @click="cancelAdding"
-            )
-          .edit-form__buttons-item
-            pre {{mode}}
-            app-button(
+              elem="file"
               text="Загрузить"
-              @click="mode === 'add' ? addNewWork() : editWork()"
-              :disabled="disabled"
+              @change="handlePhotoUpload"
             )
 
+        .edit-form__col
+          .edit-form__row
+            app-input(
+              title="Название"
+              v-model="work.title"
+            )
+          .edit-form__row
+            app-input(
+              title="Ссылка"
+              v-model="work.link"
+            )
+          .edit-form__row
+            app-input(
+              title="Описание"
+              fieldType="textarea"
+              v-model="work.description"
+            )
+          .edit-form__row
+            add-tags(
+              v-model="work.techs"
+              @removeTag="value => this.work.techs = value"
+            )
 </template>
 
 <script>
@@ -82,13 +68,14 @@ export default {
     }
   },
   components: {
-    card: () => import("components/card.vue"),
     appInput: () => import("components/input.vue"),
-    appButton: () => import("components/button.vue"),
-    addTags: () => import("components/add-tags.vue")
+    addTags: () => import("components/add-tags.vue"),
+    addingForm: () => import("components/adding-form.vue"),
+    appButton: () => import("components/button.vue")
   },
   data() {
     return {
+      disableForm: this.disabled,
       renderedPhoto: "",
       work: {
         id: 0,
@@ -140,7 +127,7 @@ export default {
       this.updateWork(this.work);
     },
     async addNewWork() {
-      this.disabled = true;
+      this.disableForm = true;
       try {
         const response = await this.storeWork(this.work);
 
@@ -157,7 +144,7 @@ export default {
           text: error.message
         });
       } finally {
-        this.disabled = false;
+        this.disableForm = false;
       }
     },
     cancelAdding() {
@@ -218,18 +205,6 @@ export default {
   }
 }
 
-.edit-form__buttons {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.edit-form__buttons-item {
-  margin-right: 20px;
-
-  &:last-child {
-    margin-right: 0px;
-  }
-}
 
 .edit-form__change-pic {
   color: #383bcf;
