@@ -30,11 +30,7 @@ export default {
     }
   },
   components: {
-    iconedBtn: () => import("components/iconed-btn.vue"),
-    tags: () => import("components/tags.vue"),
-    card: () => import("components/card.vue"),
     addNewButton: () => import("components/add-new.vue"),
-    appInput: () => import("components/input.vue"),
     addNewWorkForm: () => import("components/works-add.vue"),
     worksItem: () => import("components/works-item.vue")
   },

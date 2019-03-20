@@ -8,28 +8,13 @@
         li.reviews__item
           add-new
         li.reviews__item(v-for="review in reviews")
-          card
-            template(slot="title")
-              user(
-                :user="constructUserObj(review)"
-              )
-            .reviews__content(slot="content")
-              .reviews__content-text 
-                p {{review.text}}
-              .reviews__btns
-                iconedBtn(
-                  class="is-pencil"
-                  data-text="Править"
-                )
-                iconedBtn(
-                  class="is-cross"
-                  data-text="Удалить"
-                )
+          reviews-item(
+            :review="review"
+          )
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { getAbsoluteImgPath } from "@/helpers/pictures";
 
 export default {
   props: {
@@ -39,11 +24,9 @@ export default {
     }
   },
   components: {
-    card: () => import("components/card.vue"),
     addNew: () => import("components/add-new.vue"),
-    user: () => import("components/user.vue"),
-    iconedBtn: () => import("components/iconed-btn.vue"),
-    addNewReview: () => import("components/reviews-add.vue")
+    addNewReview: () => import("components/reviews-add.vue"),
+    reviewsItem: () => import("components/reviews-item.vue")
   },
   computed: {
     ...mapState("reviews", {
@@ -56,13 +39,6 @@ export default {
   methods: {
     ...mapActions("reviews", ["fetchReviews"]),
     ...mapActions("tooltips", ["showTooltip"]),
-    constructUserObj(data) {
-      return {
-        name: data.author,
-        occ: data.occ,
-        avatar: getAbsoluteImgPath(data.photo)
-      };
-    },
     async collectReviews() {
       try {
         await this.fetchReviews();
@@ -92,21 +68,6 @@ export default {
 
 .reviews__form {
   margin-bottom: 30px;
-}
-
-.reviews__content {
-  min-height: 220px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.reviews__content-text {
-  line-height: 1.88;
-  font-weight: 600;
-}
-.reviews__btns {
-  display: flex;
-  justify-content: space-between;
 }
 </style>
 

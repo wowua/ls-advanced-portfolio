@@ -1,7 +1,7 @@
 <template lang="pug">
   adding-form(
     title="Новый отзыв"
-    @submit="addNewReview"
+    @submit="editCurrentReview"
   )
     .reviews__form-content(slot="form-content")
       .reviews__form-userpic
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { renderer, getAbsoluteImgPath } from "@/helpers/pictures";
 export default {
   components: {
@@ -59,13 +59,36 @@ export default {
     };
   },
   computed: {
+    ...mapState("reviews", {
+      currentReview: state => state.currentReview
+    }),
     userAvatarUrl() {
-      return `url(${this.renderedAvatar})`
+      return `url(${this.renderedAvatar})`;
+    }
+  },
+  watch: {
+    currentReview(value) {
+      this.fillFormWithCurrentReviewData();
     }
   },
   methods: {
-    ...mapActions("reviews", ["addReview"]),
+    ...mapActions("reviews", ["addReview", "updateReview"]),
     ...mapActions("tooltips", ["showTooltip"]),
+    async editCurrentReview() {
+      try {
+        const response = await this.updateReview(this.review);
+
+        this.showTooltip({
+          type: "success",
+          text: "Работа обновлена"
+        })
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: "Работу удалить не удалось"
+        })
+      }
+    },
     async addNewReview() {
       try {
         const response = await this.addReview(this.review);
@@ -75,13 +98,12 @@ export default {
         this.showTooltip({
           type: "success",
           text: "Отзыв добавлен"
-        })
+        });
       } catch (error) {
-
         this.showTooltip({
           type: "error",
           text: error.message
-        })
+        });
       }
     },
     clearFormFields() {
@@ -90,17 +112,20 @@ export default {
       });
       this.renderedAvatar = "";
     },
+    fillFormWithCurrentReviewData() {
+      Object.keys(this.review).forEach(key => {
+        this.review[key] = this.currentReview[key];
+      });
+      this.renderedAvatar = getAbsoluteImgPath(this.currentReview.photo);
+    },
     async handlePhotoUpload(e) {
       const file = e.target.files[0];
       this.review.photo = file;
 
       try {
-        const renderedResult = await renderer(file); 
+        const renderedResult = await renderer(file);
         this.renderedAvatar = renderedResult;
-      } catch (error) {
-        
-      }
-
+      } catch (error) {}
     }
   }
 };

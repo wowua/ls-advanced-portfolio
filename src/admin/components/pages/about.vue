@@ -58,7 +58,7 @@ export default {
     return {
       showAddingCard: false,
       loading: false,
-      title: "",
+      title: ""
     };
   },
   created() {
