@@ -1,3 +1,4 @@
+import { wrapIntoFormData } from "@/helpers/formData";
 export default {
   namespaced: true,
   state: {
@@ -69,13 +70,3 @@ export default {
     }
   }
 };
-
-function wrapIntoFormData(plainObject) {
-  const formData = new FormData();
-
-  Object.keys(plainObject).forEach(key => {
-    formData.append(key, plainObject[key]);
-  });
-
-  return formData;
-}
