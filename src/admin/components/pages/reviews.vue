@@ -7,13 +7,15 @@
       ul.reviews
         li.reviews__item
           add-new
-        li.reviews__item
+        li.reviews__item(v-for="review in reviews")
           card
             template(slot="title")
-              user
+              user(
+                :user="constructUserObj(review)"
+              )
             .reviews__content(slot="content")
               .reviews__content-text 
-                p Этот код выдержит любые испытания. Только пожалуйста, не загружайте сайт на слишком старых браузерах
+                p {{review.text}}
               .reviews__btns
                 iconedBtn(
                   class="is-pencil"
@@ -26,9 +28,12 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+import { getAbsoluteImgPath } from "@/helpers/pictures";
+
 export default {
   props: {
-    pageTitle : {
+    pageTitle: {
       type: String,
       default: ""
     }
@@ -39,12 +44,40 @@ export default {
     user: () => import("components/user.vue"),
     iconedBtn: () => import("components/iconed-btn.vue"),
     addNewReview: () => import("components/reviews-add.vue")
+  },
+  computed: {
+    ...mapState("reviews", {
+      reviews: state => state.reviews
+    })
+  },
+  created() {
+    this.collectReviews();
+  },
+  methods: {
+    ...mapActions("reviews", ["fetchReviews"]),
+    ...mapActions("tooltips", ["showTooltip"]),
+    constructUserObj(data) {
+      return {
+        name: data.author,
+        occ: data.occ,
+        avatar: getAbsoluteImgPath(data.photo)
+      };
+    },
+    async collectReviews() {
+      try {
+        await this.fetchReviews();
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: "Не удалось загурузить отзывы"
+        });
+      }
+    }
   }
 };
 </script>
 
 <style lang="postcss" scoped>
-
 .reviews {
   display: flex;
   flex-wrap: wrap;
@@ -54,6 +87,7 @@ export default {
 .reviews__item {
   margin-left: 30px;
   width: calc(100% / 3 - 30px);
+  margin-bottom: 30px;
 }
 
 .reviews__form {
