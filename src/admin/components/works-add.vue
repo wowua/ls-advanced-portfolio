@@ -115,7 +115,7 @@ export default {
       }
     },
     mode(value) {
-      if (value === 'add') {
+      if (value === "add") {
         this.clearFormFields();
       }
     }
@@ -124,14 +124,26 @@ export default {
     ...mapActions("works", ["storeWork", "updateWork"]),
     ...mapActions("tooltips", ["showTooltip"]),
     async editWork() {
-      this.updateWork(this.work);
+      try {
+        const response = await this.updateWork(this.work);
+        this.$emit("closeForm");
+
+        this.showTooltip({
+          type: "success",
+          text: "Работа обновлена"
+        });
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: error.message
+        });
+      }
     },
     async addNewWork() {
       this.disableForm = true;
       try {
         const response = await this.storeWork(this.work);
 
-        this.$emit("closeForm");
         this.clearFormFields();
 
         this.showTooltip({
@@ -152,15 +164,11 @@ export default {
       this.$emit("closeForm");
     },
     clearFormFields() {
-      Object.keys(this.work).forEach(key => {
-        this.work[key] = "";
-      });
+      this.work = {};
       this.renderedPhoto = "";
     },
     fillFormWithCurrentWorkData() {
-      Object.keys(this.work).forEach(key => {
-        this.work[key] = this.currentWork[key];
-      });
+      this.work = {...this.currentWork};
       this.renderedPhoto = getAbsoluteImgPath(this.currentWork.photo);
     },
     async handlePhotoUpload(e) {
@@ -204,7 +212,6 @@ export default {
     padding: 0;
   }
 }
-
 
 .edit-form__change-pic {
   color: #383bcf;

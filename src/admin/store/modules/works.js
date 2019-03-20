@@ -1,4 +1,4 @@
-import { wrapIntoFormData } from "@/helpers/formData";
+import { wrapIntoFormData } from "@/helpers/forms";
 export default {
   namespaced: true,
   state: {

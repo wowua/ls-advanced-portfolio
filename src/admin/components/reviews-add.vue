@@ -1,7 +1,8 @@
 <template lang="pug">
   adding-form(
-    title="Новый отзыв"
-    @submit="editCurrentReview"
+    :title="title"
+    @submit="mode === 'add' ? addNewReview() : editCurrentReview()"
+    @cancel="closeForm"
   )
     .reviews__form-content(slot="form-content")
       .reviews__form-userpic
@@ -40,6 +41,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import { renderer, getAbsoluteImgPath } from "@/helpers/pictures";
+
 export default {
   components: {
     appInput: () => import("components/input.vue"),
@@ -58,6 +60,17 @@ export default {
       }
     };
   },
+  props: {
+    title: {
+      type: String,
+      default: "Новый отзыв"
+    },
+    mode: {
+      type: String,
+      default: "add",
+      validator: value => ["add", "edit"].includes(value)
+    }
+  },
   computed: {
     ...mapState("reviews", {
       currentReview: state => state.currentReview
@@ -68,31 +81,38 @@ export default {
   },
   watch: {
     currentReview(value) {
-      this.fillFormWithCurrentReviewData();
+      if (this.mode === "edit") this.fillFormWithCurrentReviewData();
     }
+  },
+  created() {
+    if (this.mode === "edit") this.fillFormWithCurrentReviewData();
   },
   methods: {
     ...mapActions("reviews", ["addReview", "updateReview"]),
     ...mapActions("tooltips", ["showTooltip"]),
+    closeForm() {
+      this.review = {};
+      this.$emit("cancel");
+    },
     async editCurrentReview() {
       try {
         const response = await this.updateReview(this.review);
 
+        this.$emit("cancel");
         this.showTooltip({
           type: "success",
           text: "Работа обновлена"
-        })
+        });
       } catch (error) {
         this.showTooltip({
           type: "error",
-          text: "Работу удалить не удалось"
-        })
+          text: error.message
+        });
       }
     },
     async addNewReview() {
       try {
         const response = await this.addReview(this.review);
-
         this.clearFormFields();
 
         this.showTooltip({
@@ -107,15 +127,11 @@ export default {
       }
     },
     clearFormFields() {
-      Object.keys(this.review).forEach(key => {
-        this.review[key] = "";
-      });
+      this.review = {};
       this.renderedAvatar = "";
     },
     fillFormWithCurrentReviewData() {
-      Object.keys(this.review).forEach(key => {
-        this.review[key] = this.currentReview[key];
-      });
+      this.review = {...this.currentReview};
       this.renderedAvatar = getAbsoluteImgPath(this.currentReview.photo);
     },
     async handlePhotoUpload(e) {
@@ -125,7 +141,12 @@ export default {
       try {
         const renderedResult = await renderer(file);
         this.renderedAvatar = renderedResult;
-      } catch (error) {}
+      } catch (error) {
+        this.showTooltip({
+          type: "error",
+          text: "Ошибка во время обработки файла"
+        });
+      }
     }
   }
 };

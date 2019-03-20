@@ -11,7 +11,7 @@
         iconedBtn(
           class="is-pencil"
           data-text="Править"
-          @click="SET_CURRENT_REVIEW(review.id)"
+          @click="updateWork"
         )
         iconedBtn(
           class="is-cross"
@@ -37,6 +37,10 @@ export default {
     ...mapActions("reviews", ["removeReview"]),
     ...mapActions("tooltips", ["showTooltip"]),
     ...mapMutations("reviews", ["SET_CURRENT_REVIEW"]),
+    updateWork() {
+      this.SET_CURRENT_REVIEW(this.review.id);
+      this.$emit("updateWork");
+    },
     async removeExistedReview() {
       try {
         const response = await this.removeReview(this.review.id);

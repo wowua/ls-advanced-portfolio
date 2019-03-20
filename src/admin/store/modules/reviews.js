@@ -1,5 +1,5 @@
 import { generateStdError } from "@/helpers/errorHandler";
-import { wrapIntoFormData } from "@/helpers/formData";
+import { wrapIntoFormData } from "@/helpers/forms";
 
 export default {
   namespaced: true,

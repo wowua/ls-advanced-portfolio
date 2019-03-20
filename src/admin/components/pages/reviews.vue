@@ -2,14 +2,21 @@
   .reviews-section
     h1.page-title {{pageTitle}}
     .reviews-container
-      .reviews__form    
-        add-new-review
+      .reviews__form(v-if="showAddingForm")    
+        add-new-review(
+          :title="formTitle"
+          :mode="mode"
+          @cancel="showAddingForm = false"
+        )
       ul.reviews
         li.reviews__item
-          add-new
+          add-new(
+            @click="addNewReview"
+          )
         li.reviews__item(v-for="review in reviews")
           reviews-item(
             :review="review"
+            @updateWork="updateWork"
           )
 </template>
 
@@ -23,6 +30,12 @@ export default {
       default: ""
     }
   },
+  data() {
+    return {
+      mode: "",
+      showAddingForm: false
+    };
+  },
   components: {
     addNew: () => import("components/add-new.vue"),
     addNewReview: () => import("components/reviews-add.vue"),
@@ -31,7 +44,18 @@ export default {
   computed: {
     ...mapState("reviews", {
       reviews: state => state.reviews
-    })
+    }),
+    formTitle() {
+      switch (this.mode) {
+        case "add":
+          return "Добавить отзыв";
+        case "edit":
+          return "Изменить отзыв";
+        default:
+          return "";
+          console.warn("не верное значение поля mode в reviews");
+      }
+    }
   },
   created() {
     this.collectReviews();
@@ -39,6 +63,14 @@ export default {
   methods: {
     ...mapActions("reviews", ["fetchReviews"]),
     ...mapActions("tooltips", ["showTooltip"]),
+    updateWork() {
+      this.mode = "edit";
+      this.showAddingForm = true;
+    },
+    addNewReview() {
+      this.mode = "add";
+      this.showAddingForm = true;
+    },
     async collectReviews() {
       try {
         await this.fetchReviews();
