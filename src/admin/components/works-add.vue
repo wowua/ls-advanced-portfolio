@@ -2,7 +2,7 @@
   adding-form(
     :title="editFormTitle"
     @cancel="cancelAdding"
-    @submit="mode === 'add' ? addNewWork() : editWork()",
+    @submit="mode === 'add' ? addNewWork() : editWork()"
     :disabled="disableForm"
   )
     template(slot="form-content")
