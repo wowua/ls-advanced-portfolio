@@ -49,7 +49,7 @@ export default {
     icon: {
       type: String,
       default: "",
-      validator: value => ["", "person", "key"].includes(value)
+      validator: value => ["", "user", "key"].includes(value)
     }
   },
   computed: {
@@ -95,17 +95,33 @@ export default {
   &_iconed {
     .input__title {
       margin-left: 45px;
+      margin-bottom: 13px;
     }
     .input__elem {
       padding-left: 45px;
-      background: left center / auto 23px no-repeat;
+      background: left center / auto 29px no-repeat;
+      font-size: 18px;
+      font-weight: bold;
+      padding-top: 17px;
+      padding-bottom: 17px;
     }
   }
 
   &_icon {
-    &-person {
-      .input__elem {
-        background-image: svg-load("user.svg", fill=#cfd2d7);
+    @each $icon in (user, key) {
+      &-$(icon) {
+        .input__elem {
+          background-image: svg-load("$(icon).svg", fill=#cfd2d7);
+        }
+      }
+    }
+  }
+  &.error {
+    @each $icon in (user, key) {
+      &.input_icon-$(icon) {
+        .input__elem {
+          background-image: svg-load("$(icon).svg", fill=$errors-color);
+        }
       }
     }
   }

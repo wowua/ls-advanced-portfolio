@@ -7,17 +7,23 @@
         .login__row
           app-input(
             title="Логин"
-            icon="person"
+            icon="user"
             v-model="user.name"
+            :errorText="validation.firstError('user.name')"
           )
         .login__row
           app-input(
             title="Пароль"
-            icon="person"
+            icon="key"
+            type="password"
             v-model="user.password"
+            :errorText="validation.firstError('user.password')"
           )
         .login__btn
-          button(type="submit").login__send-data Отправить
+          button(
+            type="submit"
+            :disabled="disableSubmit"
+          ).login__send-data Отправить
 </template>
 
 <script>
@@ -27,13 +33,24 @@ import {
   setAuthHttpHeaderToAxios
 } from "@/helpers/token.js";
 import axiosInstance from "@/requests.js";
+import { Validator } from "simple-vue-validator";
 
 export default {
+  mixins: [require("simple-vue-validator").mixin],
+  validators: {
+    "user.name": value => {
+      return Validator.value(value).required("Введите имя пользователя");
+    },
+    "user.password": value => {
+      return Validator.value(value).required("Введите пароль");
+    }
+  },
   components: {
     appInput: () => import("components/input.vue")
   },
   data() {
     return {
+      disableSubmit: false,
       user: {
         name: "admin",
         password: "admin"
@@ -42,7 +59,10 @@ export default {
   },
   methods: {
     ...mapActions("user", ["loginUser"]),
+    ...mapActions("tooltips", ["showTooltip"]),
     async login() {
+      if ((await this.$validate()) === false) return;
+      this.disableSubmit = true;
       try {
         const response = await this.loginUser(this.user);
         const token = response.data.token;
@@ -51,7 +71,13 @@ export default {
 
         this.$router.replace("/");
       } catch (error) {
-        console.log(error.message);
+        this.showTooltip({
+          type: "error",
+          text: error.message
+        })
+      } finally {
+        this.disableSubmit = false;
+        this.validation.reset();
       }
     }
   }
@@ -82,36 +108,47 @@ export default {
   }
 }
 
+.login__form-title {
+  font-size: 36px;
+  text-align: center;
+  font-weight: 600;
+}
+
 .login__content {
   position: relative;
 }
 
 .login__row {
-  margin-bottom: 25px;
+  margin-bottom: 35px;
 }
 
 .login__btn {
   display: flex;
   width: 100%;
-  padding: 0 5%;
+  padding: 0 8%;
   justify-content: center;
 }
 
 .login__send-data {
   width: 100%;
-  padding: 27px;
+  padding: 30px;
   background-image: linear-gradient(to right, #ad00ed, #5500f2);
   border-radius: 40px 0 40px;
   color: #fff;
   text-transform: uppercase;
   font-weight: bold;
   font-size: 18px;
+
+  &[disabled] {
+    opacity: 0.5;
+    filter: grayscale(100%);
+  }
 }
 
 .login__form {
-  width: 600px;
+  width: 563px;
+  padding: 50px 77px 60px;
   background: #fff;
-  padding: 40px;
 }
 </style>
 
