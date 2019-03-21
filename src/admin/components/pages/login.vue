@@ -29,7 +29,7 @@
 <script>
 import { mapActions } from "vuex";
 import {
-  setTokenToLocalStorage,
+  setToken,
   setAuthHttpHeaderToAxios
 } from "@/helpers/token.js";
 import axiosInstance from "@/requests.js";
@@ -66,7 +66,7 @@ export default {
       try {
         const response = await this.loginUser(this.user);
         const token = response.data.token;
-        setTokenToLocalStorage(token);
+        setToken(token);
         setAuthHttpHeaderToAxios(axiosInstance, token);
 
         this.$router.replace("/");

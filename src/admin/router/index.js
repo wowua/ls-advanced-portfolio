@@ -1,11 +1,13 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import routes from "./routes";
+import routes from "@/router/routes";
 import axios from "axios";
+import store from "@/store";
 
 import {
   setAuthHttpHeaderToAxios,
-  getTokenFromLocalStorage
+  getToken,
+  removeToken
 } from "../helpers/token";
 
 Vue.use(VueRouter);
@@ -18,22 +20,21 @@ const router = new VueRouter({ routes });
 
 router.beforeEach((to, from, next) => {
   const isPublicRoute = to.matched.some(record => record.meta.public);
+  const isUserLogged = store.getters["user/userIsLogged"];
 
-  if (isPublicRoute === false) {
-    setAuthHttpHeaderToAxios(guard, getTokenFromLocalStorage());
+  if (isPublicRoute === false && isUserLogged === false) {
+    setAuthHttpHeaderToAxios(guard, getToken());
     guard
       .get("/user")
       .then(response => {
-        // next();
+        next();
       })
       .catch(error => {
-        // router.replace("/login");
-        localStorage.removeItem("token");
+        router.replace("/login");
+        removeToken()
       });
   } else {
-    // next();
+    next();
   }
-
-  next();
 });
 export default router;

@@ -1,15 +1,40 @@
+import { generateStdError } from "@/helpers/errorHandler";
+import { removeToken } from "@/helpers/token";
 
 export default {
   namespaced: true,
+  state: {
+    user: {}
+  },
+  mutations: {
+    SET_USER: (state, user) => {
+      state.user = user;
+    },
+    CLEAR_USER: state => (state.user = {})
+  },
+  getters: {
+    userIsLogged: state => {
+      const userObj = state.user;
+      const userObjectIsEmpty =
+        Object.keys(userObj).length === 0 && userObj.constructor === Object;
+
+      return userObjectIsEmpty === false;
+    }
+  },
   actions: {
-    async loginUser(store, user) {
+    async loginUser({ commit }, user) {
       try {
-        const response = await this.$axios.post('/login', user);
-        return response
-      } catch (e) {
-        throw new Error(e.response.data.error);
+        const response = await this.$axios.post("/login", user);
+        commit("SET_USER", response.data);
+        return response;
+      } catch (error) {
+        generateStdError(error);
       }
-           
+    },
+    logout({ commit }) {
+      commit("CLEAR_USER");
+      removeToken();
+      location.href = "/";
     }
   }
-} 
+};

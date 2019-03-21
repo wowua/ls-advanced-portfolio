@@ -4,7 +4,7 @@
       template(v-if="$route.meta.public")
         router-view
 
-      template(v-else)
+      template(v-else-if="userIsLogged")
         header.header-container
           app-header
         section.tabs-container
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: {
     appHeader: () => import("components/header"),
@@ -27,7 +27,8 @@ export default {
   computed: {
     ...mapState("tooltips", {
       showed: state => state.showed
-    })
+    }),
+    ...mapGetters("user", ["userIsLogged"])
   },
   methods: {
     ...mapActions("tooltips", ["closeTooltip"])

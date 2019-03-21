@@ -4,7 +4,6 @@ export const generateStdError = errorObj => {
     switch (errorResponseObject.message) {
       case "The given data was invalid.":
         throw new Error("Ошибка валидации");
-
       default:
         console.error(errorResponseObject);
         throw new Error(errorResponseObject.message);
@@ -20,7 +19,7 @@ export const generateStdError = errorObj => {
         throw new Error("Токен авторизации просрочен");
       default:
         console.error(errorResponseObject);
-        throw new Error("Неизвестная ошибка");
+        throw new Error(errorResponseObject.error);
     }
   }
 };

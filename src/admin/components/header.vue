@@ -10,8 +10,18 @@
             a.exit-btn Выйти
             
         .header__title Панель администрирования
-      a.exit-btn Выйти
+      a.exit-btn(@click="logout") Выйти
 </template>
+
+<script>
+import { mapActions } from "vuex";
+export default {
+  methods: {
+    ...mapActions("user", ["logout"])
+  }
+};
+</script>
+
 
 <style lang="postcss" scoped>
 @import url("../../styles/mixins.pcss");

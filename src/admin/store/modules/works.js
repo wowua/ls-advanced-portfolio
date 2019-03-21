@@ -1,4 +1,6 @@
 import { wrapIntoFormData } from "@/helpers/forms";
+import { generateStdError } from "@/helpers/errorHandler";
+
 export default {
   namespaced: true,
   state: {
@@ -17,7 +19,6 @@ export default {
       )[0];
     },
     UPDATE_WORK: (state, updatedWork) => {
-      
       state.works = state.works.map(work =>
         work.id === updatedWork.id ? updatedWork : work
       );
@@ -31,7 +32,7 @@ export default {
         commit("ADD_WORK", response.data);
         return response;
       } catch (error) {
-        throw new Error(error.response.data.message);
+        generateStdError(error);
       }
     },
     async fetchWorks({ commit }) {
@@ -40,7 +41,7 @@ export default {
         commit("SET_WORKS", response.data);
         return response;
       } catch (error) {
-        throw new Error(error.response.data.message);
+        generateStdError(error);
       }
     },
     async removeWork({ commit }, workId) {
@@ -49,12 +50,10 @@ export default {
         commit("REMOVE_WORK", workId);
         return response;
       } catch (error) {
-        throw new Error(error.response.data.message);
+        generateStdError(error);
       }
     },
     async updateWork({ commit }, payload) {
-      console.log('payload', payload);
-      
       const data = wrapIntoFormData(payload);
       try {
         const response = await this.$axios.post(`/works/${payload.id}`, data);
@@ -63,9 +62,7 @@ export default {
 
         return response;
       } catch (error) {
-        console.log(error);
-        
-        throw new Error(error.response.data.message);
+        generateStdError(error);
       }
     }
   }
