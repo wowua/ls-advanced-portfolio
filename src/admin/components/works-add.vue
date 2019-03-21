@@ -18,7 +18,10 @@
               a.edit-form__change-pic Изменить превью
               input(type="file" @change="handlePhotoUpload").edit-form__preview-input
 
-          label.edit-from__picture(v-else)
+          label.edit-form__picture(
+            v-else
+            :class="{'error' : validation.hasError('work.photo')}"
+          )
             .edit-form__picture-text
               | Перетащите либо загрузите изображения
             app-button(
@@ -26,36 +29,61 @@
               text="Загрузить"
               @change="handlePhotoUpload"
             )
-
+            .edit-form__file-error
+              errors-tooltip(
+              )
         .edit-form__col
           .edit-form__row
             app-input(
               title="Название"
               v-model="work.title"
+              :errorText="validation.firstError('work.title')"
             )
           .edit-form__row
             app-input(
               title="Ссылка"
               v-model="work.link"
+              :errorText="validation.firstError('work.link')"
             )
           .edit-form__row
             app-input(
               title="Описание"
               fieldType="textarea"
               v-model="work.description"
+              :errorText="validation.firstError('work.description')"
             )
           .edit-form__row
             add-tags(
               v-model="work.techs"
               @removeTag="value => this.work.techs = value"
+              :errorText="validation.firstError('work.techs')"
             )
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
 import { renderer, getAbsoluteImgPath } from "@/helpers/pictures";
+import { Validator } from "simple-vue-validator";
 
 export default {
+  mixins: [require("simple-vue-validator").mixin],
+  validators: {
+    "work.title": value => {
+      return Validator.value(value).required("Заполните название");
+    },
+    "work.techs": value => {
+      return Validator.value(value).required("Заполните технологии");
+    },
+    "work.link": value => {
+      return Validator.value(value).required("Заполните ссылку");
+    },
+    "work.description": value => {
+      return Validator.value(value).required("Заполните описание");
+    },
+    "work.photo": value => {
+      return Validator.value(value).required("Вставьте файл");
+    }
+  },
   props: {
     mode: {
       type: String,
@@ -71,7 +99,8 @@ export default {
     appInput: () => import("components/input.vue"),
     addTags: () => import("components/add-tags.vue"),
     addingForm: () => import("components/adding-form.vue"),
-    appButton: () => import("components/button.vue")
+    appButton: () => import("components/button.vue"),
+    errorsTooltip: () => import("components/errors-tooltip.vue")
   },
   data() {
     return {
@@ -124,6 +153,9 @@ export default {
     ...mapActions("works", ["storeWork", "updateWork"]),
     ...mapActions("tooltips", ["showTooltip"]),
     async editWork() {
+      if ((await this.$validate()) === false) return;
+
+      this.disableForm = true;
       try {
         const response = await this.updateWork(this.work);
         this.$emit("closeForm");
@@ -137,9 +169,13 @@ export default {
           type: "error",
           text: error.message
         });
+      } finally {
+        this.disableForm = false;
+        this.validation.reset();
       }
     },
     async addNewWork() {
+      if ((await this.$validate()) === false) return;
       this.disableForm = true;
       try {
         const response = await this.storeWork(this.work);
@@ -157,6 +193,7 @@ export default {
         });
       } finally {
         this.disableForm = false;
+        this.validation.reset();
       }
     },
     cancelAdding() {
@@ -168,7 +205,7 @@ export default {
       this.renderedPhoto = "";
     },
     fillFormWithCurrentWorkData() {
-      this.work = {...this.currentWork};
+      this.work = { ...this.currentWork };
       this.renderedPhoto = getAbsoluteImgPath(this.currentWork.photo);
     },
     async handlePhotoUpload(e) {
@@ -218,7 +255,7 @@ export default {
   font-weight: 600;
 }
 
-.edit-from__picture {
+.edit-form__picture {
   display: block;
   min-height: 276px;
   border: dashed 1px #a1a1a1;
@@ -229,6 +266,22 @@ export default {
   align-items: center;
   padding: 0 24%;
   cursor: pointer;
+  position: relative;
+
+  &.error {
+    border-color: $errors-color;
+    .edit-form__file-error {
+      display: block;
+    }
+  }
+}
+
+.edit-form__file-error {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%);
+  display: none;
 }
 
 .edit-form__picture-text {

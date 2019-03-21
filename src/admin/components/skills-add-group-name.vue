@@ -4,6 +4,7 @@
       app-input(
         placeholder="Название новой группы"
         :value="value"
+        :errorText="errorText"
         @input="$emit('input', $event)"
         @keydown.native.enter="$emit('approve')"
         autofocus
@@ -25,7 +26,8 @@
 <script>
 export default {
   props: {
-    value: String
+    value: String,
+    errorText: String
   },
   components: {
     iconedBtn: () => import("components/iconed-btn.vue"),

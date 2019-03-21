@@ -1,12 +1,15 @@
 <template lang="pug">
   adding-form(
     :title="title"
+    :disabled="disableForm"
     @submit="mode === 'add' ? addNewReview() : editCurrentReview()"
     @cancel="closeForm"
   )
     .reviews__form-content(slot="form-content")
       .reviews__form-userpic
-        label.reviews__form-avatar-upload
+        label.reviews__form-avatar-upload(
+          :class="{ 'error' :  validation.hasError('review.photo') }"
+        )
           input(
             type="file"
             @change="handlePhotoUpload"
@@ -17,17 +20,23 @@
               :style="{'backgroundImage' : userAvatarUrl}"
             )
           .reviews__form-addphoto Добавить фото
+          .reviews__avatar-error
+            errors-tooltip(
+              :errorText="validation.firstError('review.photo')"
+            )
       .reviews__form-col
         .reviews__form-row
           .reviews__form-block
             app-input(
               title="Имя автора"
               v-model="review.author"
+              :errorText="validation.firstError('review.author')"
             )
           .reviews__form-block
             app-input(
               title="Титул автора"
               v-model="review.occ"
+              :errorText="validation.firstError('review.occ')"
             )
         .reviews__form-row
           .reviews__form-block
@@ -35,22 +44,41 @@
               title="Отзыв"
               field-type="textarea"
               v-model="review.text"
+              :errorText="validation.firstError('review.text')"
             )
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
 import { renderer, getAbsoluteImgPath } from "@/helpers/pictures";
+import { Validator } from "simple-vue-validator";
 
 export default {
+  mixins: [require("simple-vue-validator").mixin],
+  validators: {
+    "review.author": value => {
+      return Validator.value(value).required("Заполните автора");
+    },
+    "review.occ": value => {
+      return Validator.value(value).required("Укажите роль автора");
+    },
+    "review.text": value => {
+      return Validator.value(value).required("Введите текст отзыва");
+    },
+    "review.photo": value => {
+      return Validator.value(value).required("Вставьте аватар");
+    }
+  },
   components: {
     appInput: () => import("components/input.vue"),
     appButton: () => import("components/button.vue"),
-    addingForm: () => import("components/adding-form.vue")
+    addingForm: () => import("components/adding-form.vue"),
+    errorsTooltip: () => import("components/errors-tooltip.vue")
   },
   data() {
     return {
       renderedAvatar: "",
+      disableForm: false,
       review: {
         id: 0,
         author: "",
@@ -95,6 +123,8 @@ export default {
       this.$emit("cancel");
     },
     async editCurrentReview() {
+      if (this.$validate() === false) return;
+      this.disableForm = true;
       try {
         const response = await this.updateReview(this.review);
 
@@ -108,9 +138,14 @@ export default {
           type: "error",
           text: error.message
         });
+      } finally {
+        this.disableForm = false;
+        this.validation.reset();
       }
     },
     async addNewReview() {
+      if ((await this.$validate()) === false) return;
+      this.disableForm = true;
       try {
         const response = await this.addReview(this.review);
         this.clearFormFields();
@@ -124,6 +159,9 @@ export default {
           type: "error",
           text: error.message
         });
+      } finally {
+        this.disableForm = false;
+        this.valdation.reset();
       }
     },
     clearFormFields() {
@@ -131,7 +169,7 @@ export default {
       this.renderedAvatar = "";
     },
     fillFormWithCurrentReviewData() {
-      this.review = {...this.currentReview};
+      this.review = { ...this.currentReview };
       this.renderedAvatar = getAbsoluteImgPath(this.currentReview.photo);
     },
     async handlePhotoUpload(e) {
@@ -229,6 +267,20 @@ export default {
 
 .reviews__form-avatar-upload {
   position: relative;
+
+  &.error {
+    .reviews__avatar-error {
+      display: block;
+    }
+  }
+}
+
+.reviews__avatar-error {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
 }
 
 .reviews__form-file-input {

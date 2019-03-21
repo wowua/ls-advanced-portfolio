@@ -13,6 +13,7 @@
       )
         add-new-skills-group(
           v-model="title"
+          :errorText="validation.firstError('title')"
           @closeOrRemove="close"
           @approve="addSkillsGroup"
         )
@@ -34,7 +35,15 @@
 </template>
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
+import { Validator } from "simple-vue-validator";
+
 export default {
+  mixins: [require("simple-vue-validator").mixin],
+  validators: {
+    title: value => {
+      return Validator.value(value).required("Заполните название");
+    }
+  },
   components: {
     skillsCard: () => import("components/card.vue"),
     appInput: () => import("components/input.vue"),
@@ -83,6 +92,8 @@ export default {
       }
     },
     async addSkillsGroup() {
+      if (await this.$validate() === false) return
+
       this.loading = true;
       try {
         const response = await this.storeSkillsGroup({
@@ -103,6 +114,7 @@ export default {
         });
       } finally {
         this.loading = false;
+        this.validation.reset();
       }
     }
   }

@@ -1,3 +1,5 @@
+import { generateStdError } from "@/helpers/errorHandler";
+
 export default {
   namespaced: true,
   state: {
@@ -38,7 +40,7 @@ export default {
         commit("ADD_SKILLS_CATEGORY", response.data);
         return response;
       } catch (error) {
-        throw new Error(error.response.data.error);
+        generateStdError(error);
       }
     },
     async updateSkillsGroup({ commit }, payload) {
@@ -52,7 +54,7 @@ export default {
 
         return response;
       } catch (error) {
-        throw new Error(error.response.data.message);
+        generateStdError(error);
       }
     },
     async removeSkillsGroup({ commit }, categoryId) {
@@ -61,7 +63,7 @@ export default {
         commit("REMOVE_SKILLS_CATEGORY", categoryId);
         return response;
       } catch (error) {
-        throw new Error(error.response.data.message);
+        generateStdError(error);
       }
     },
     async fetchCategories({ commit }) {
@@ -70,7 +72,7 @@ export default {
         commit("SET_SKILLS_CATEGORIES", response.data);
         return response;
       } catch (error) {
-        throw new Error(error.response.data.error);
+        generateStdError(error);
       }
     },
     async fetchSkills({ commit }) {
@@ -79,7 +81,7 @@ export default {
         commit("SET_SKILLS_STATE", response.data);
         return response;
       } catch (error) {
-        throw new Error(error.response.data.error);
+        generateStdError(error);
       }
     },
     async addSkill({ commit }, payload) {
@@ -87,7 +89,7 @@ export default {
         const response = await this.$axios.post("/skills", payload);
         commit("ADD_NEW_SKILL", response.data);
       } catch (error) {
-        throw new Error(error.response.data.message);
+        generateStdError(error);
       }
     },
     async removeSkill({ commit }, skillId) {
@@ -98,7 +100,7 @@ export default {
 
         return response;
       } catch (error) {
-        throw new Error(error.response.data.message);
+        generateStdError(error);
       }
     },
     async updateSkill({ commit }, payload) {
@@ -112,7 +114,7 @@ export default {
 
         return response;
       } catch (error) {
-        throw new Error(error.response.data.message);
+        generateStdError(error);
       }
     }
   }

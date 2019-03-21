@@ -5,6 +5,7 @@
         title="Добавление тега"
         :value="tags"
         @input="handleInput"
+        :errorText="errorText"
       )
     tags(
       :tags="tagsArray"
@@ -20,7 +21,8 @@ export default {
     tags: () => import("./tags.vue")
   },
   props: {
-    value: String
+    value: String,
+    errorText: String,
   },
   data() {
     return {

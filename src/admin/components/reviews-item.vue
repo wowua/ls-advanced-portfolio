@@ -42,6 +42,7 @@ export default {
       this.$emit("updateWork");
     },
     async removeExistedReview() {
+      if (confirm('Удалить отзыв?') === false)
       try {
         const response = await this.removeReview(this.review.id);
 

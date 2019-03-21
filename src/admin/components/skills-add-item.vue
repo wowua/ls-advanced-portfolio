@@ -8,6 +8,7 @@
         app-input(
           placeholder="Новый навык"
           v-model="skill.title"
+          :errorText="validation.firstError('skill.title')"
         )
       .add-new__col.add-new__col_small
         app-input(
@@ -16,13 +17,28 @@
           max="100"
           maxlength="3" 
           v-model="skill.percent"
+          :errorText="validation.firstError('skill.percent')"
         )
     button(type="submit" data-text="+").add-new__button
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import { Validator } from "simple-vue-validator";
+
 export default {
+  mixins: [require("simple-vue-validator").mixin],
+  validators: {
+    "skill.title": value => {
+      return Validator.value(value).required("Заполните название");
+    },
+    "skill.percent": value => {
+      return Validator.value(value)
+        .integer("Должно быть числом")
+        .between(0, 100, "Некорректное значение для процентов")
+        .required("Поле не может быть пустым");
+    }
+  },
   props: {
     blocked: {
       type: Boolean,
@@ -46,7 +62,9 @@ export default {
     ...mapActions("skills", ["addSkill"]),
     ...mapActions("tooltips", ["showTooltip"]),
     async addNewSkill() {
-      this.loading = true
+      if ((await this.$validate()) === false) return;
+
+      this.loading = true;
       try {
         const response = await this.addSkill({
           category: this.categoryId,
@@ -55,21 +73,20 @@ export default {
         });
 
         this.skill.percent = 0;
-        this.skill.title = ""
+        this.skill.title = "";
 
         this.showTooltip({
-          type: 'success',
-          text: 'Скилл добавлен'
-        })
-
+          type: "success",
+          text: "Скилл добавлен"
+        });
       } catch (error) {
         this.showTooltip({
-          type: 'error',
+          type: "error",
           text: error.message
-        })
-
+        });
       } finally {
-        this.loading = false
+        this.loading = false;
+        this.validation.reset();
       }
     }
   }

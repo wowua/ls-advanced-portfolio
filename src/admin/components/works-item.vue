@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     imagePath() {
-      return getAbsoluteImgPath(this.work.photo)
+      return getAbsoluteImgPath(this.work.photo);
     },
     tagsArray() {
       return this.work.techs.split(",");
@@ -58,6 +58,7 @@ export default {
       this.$emit("updateWork");
     },
     async removeExistedWork() {
+      if (confirm("Удалить работу?") === false) return;
       try {
         const response = await this.removeWork(this.work.id);
 

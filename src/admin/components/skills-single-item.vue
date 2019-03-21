@@ -28,13 +28,18 @@
         app-input(
           v-model="updatedSkill.title"
           no-side-paddings
+          :errorText="validation.firstError('updatedSkill.title')"
         )
     td.skills__cell 
-      .skills__input
-        input(
-          v-model="updatedSkill.percent"
+      .skills__input-wrapper
+        app-input(
           type="number"
-        ).skills__input-text.skills__input-text--input
+          min="0"
+          max="100"
+          maxlength="3" 
+          v-model="updatedSkill.percent"
+          :errorText="validation.firstError('updatedSkill.percent')"
+        )
     td.skills__cell
       iconed-btn(
         class="is-tick no-words"
@@ -49,10 +54,24 @@
 
 <script>
 import { mapActions } from "vuex";
+import { Validator } from "simple-vue-validator";
+
 export default {
+  mixins: [require("simple-vue-validator").mixin],
   components: {
     iconedBtn: () => import("components/iconed-btn.vue"),
     appInput: () => import("components/input.vue")
+  },
+  validators: {
+    "updatedSkill.title": value => {
+      return Validator.value(value).required("Заполните название");
+    },
+    "updatedSkill.percent": value => {
+      return Validator.value(value)
+        .integer("Должно быть числом")
+        .between(0, 100, "Некорректное значение для процентов")
+        .required("Поле не может быть пустым");
+    }
   },
   data() {
     return {
@@ -94,6 +113,8 @@ export default {
     },
 
     async editSkill() {
+      if (await this.$validate() === false) return
+
       try {
         const response = await this.updateSkill(this.updatedSkill);
         this.editmode = false;
@@ -101,12 +122,14 @@ export default {
         this.showTooltip({
           type: "success",
           text: "Скилл обновлен"
-        })      
+        });
       } catch (error) {
         this.showTooltip({
           type: "error",
           text: error.message
-        })      
+        });
+      } finally {
+        this.validation.reset();
       }
     }
   }
@@ -127,6 +150,10 @@ export default {
   &:first-child {
     width: 60%;
   }
+}
+
+.skills__input-wrapper {
+  width: 100px;
 }
 
 .skills__input {

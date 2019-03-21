@@ -4,6 +4,7 @@
       template(slot="title")
         add-group-name(
           :value="value"
+          :errorText="errorText"
           @input="$emit('input', $event)"
           @approve="$emit('approve')"
           @closeOrRemove="$emit('closeOrRemove')"
@@ -23,7 +24,8 @@ export default {
     addGroupName: () => import("components/skills-add-group-name.vue")
   },
   props: {
-    value: String
+    value: String,
+    errorText: String
   },
   data() {
     return {
