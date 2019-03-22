@@ -1,37 +1,41 @@
 <template lang="pug">
   .about-page-container
-    .about-page__title
-      h1.page-title {{pageTitle}}
-      button.about-page__add-new(
-        v-if="showAddingCard === false"
-        @click="showAddingCard = true"
-      ) Добавить группу
-    ul.skill-list
-      li.skill-list__item(
-        v-if="showAddingCard"
-        :class="{'loading': loading}"
-      )
-        add-new-skills-group(
-          v-model="title"
-          :errorText="validation.firstError('title')"
-          @closeOrRemove="close"
-          @approve="addSkillsGroup"
-        )
-      li.skill-list__item(v-for="skillsCategory in skillsCategories")
-        skills-card 
-          template(slot="title")
-            skills-title(
-              :categoryData="skillsCategory"
+    .container
+      .about-page__title
+        h1.page-title {{pageTitle}}
+        button.about-page__add-new(
+          v-if="showAddingCard === false"
+          @click="showAddingCard = true"
+        ) Добавить группу
+
+    .about-page__content
+      .container.container--mobile-wide
+        ul.skill-list
+          li.skill-list__item(
+            v-if="showAddingCard"
+            :class="{'loading': loading}"
+          )
+            add-new-skills-group(
+              v-model="title"
+              :errorText="validation.firstError('title')"
+              @closeOrRemove="close"
+              @approve="addSkillsGroup"
             )
-          template(slot="content")
-            .skill-list__table
-              skills-table(
-                :categoryId="skillsCategory.id"
-              )
-            .add-new
-              add-new-skill(
-                :categoryId="skillsCategory.id"
-              )
+          li.skill-list__item(v-for="skillsCategory in skillsCategories")
+            skills-card 
+              template(slot="title")
+                skills-title(
+                  :categoryData="skillsCategory"
+                )
+              template(slot="content")
+                .skill-list__table
+                  skills-table(
+                    :categoryId="skillsCategory.id"
+                  )
+                .add-new
+                  add-new-skill(
+                    :categoryId="skillsCategory.id"
+                  )
 </template>
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
@@ -92,7 +96,7 @@ export default {
       }
     },
     async addSkillsGroup() {
-      if (await this.$validate() === false) return
+      if ((await this.$validate()) === false) return;
 
       this.loading = true;
       try {
@@ -132,6 +136,14 @@ export default {
   .page-title {
     margin-bottom: 0;
     margin-right: 60px;
+    @include phones {
+      margin-bottom: 28px;
+    }
+  }
+
+  @include phones {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
@@ -140,6 +152,7 @@ export default {
   font-weight: bold;
   display: flex;
   align-items: center;
+  padding: 0;
 
   &:before {
     content: "+";
@@ -150,6 +163,8 @@ export default {
     background-image: linear-gradient(to right, #006aed, #3f35cb);
     color: #fff;
     margin-right: 13px;
+    flex-shrink: 0;
+    flex-basis: 20px;
   }
 }
 
@@ -186,6 +201,7 @@ export default {
   @include phones {
     width: 100%;
     margin-left: 0;
+    margin-bottom: 12px;
   }
 }
 
@@ -197,6 +213,10 @@ export default {
   padding-left: 18%;
   position: relative;
   margin-top: auto;
+
+  @include phones {
+    padding-left: 0;
+  }
 }
 </style>
 

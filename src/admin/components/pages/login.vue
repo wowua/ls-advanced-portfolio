@@ -27,11 +27,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import {
-  setToken,
-  setAuthHttpHeaderToAxios
-} from "@/helpers/token.js";
+import { mapActions, mapGetters } from "vuex";
+import { setToken, setAuthHttpHeaderToAxios } from "@/helpers/token.js";
 import axiosInstance from "@/requests.js";
 import { Validator } from "simple-vue-validator";
 
@@ -54,8 +51,13 @@ export default {
       user: {
         name: "ls-admin",
         password: "ls-admin"
+        // name: "admin",
+        // password: "admin"
       }
     };
+  },
+  computed: {
+    ...mapGetters("user", ["userIsLogged"])
   },
   methods: {
     ...mapActions("user", ["loginUser"]),
@@ -74,7 +76,7 @@ export default {
         this.showTooltip({
           type: "error",
           text: error.message
-        })
+        });
       } finally {
         this.disableSubmit = false;
         this.validation.reset();
@@ -85,6 +87,7 @@ export default {
 </script>
 
 <style lang="postcss">
+@import "../../../styles/mixins.pcss";
 .login {
   position: fixed;
   top: 0;
@@ -116,6 +119,11 @@ export default {
 
 .login__content {
   position: relative;
+
+  @include phones {
+    height: 100%;
+    width: 100%;
+  }
 }
 
 .login__row {
@@ -149,6 +157,16 @@ export default {
   width: 563px;
   padding: 50px 77px 60px;
   background: #fff;
+
+  @include phones {
+    width: 100%;
+    padding-right: 7%;
+    padding-left: 7%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 </style>
 

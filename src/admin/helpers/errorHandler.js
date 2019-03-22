@@ -1,6 +1,8 @@
 export const generateStdError = errorObj => {
   const errorResponseObject = errorObj.response.data;
+  
   if (errorResponseObject.message) {
+    console.log(errorResponseObject);
     switch (errorResponseObject.message) {
       case "The given data was invalid.":
         throw new Error("Ошибка валидации");
@@ -11,6 +13,8 @@ export const generateStdError = errorObj => {
   }
 
   if (errorResponseObject.error) {
+    console.log(errorResponseObject);
+    
     switch (errorResponseObject.error) {
       case "token_not_provided":
         throw new Error("Токен авторизации не предоставлен");

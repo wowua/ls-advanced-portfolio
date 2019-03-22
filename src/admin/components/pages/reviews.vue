@@ -1,23 +1,25 @@
 <template lang="pug">
   .reviews-section
-    h1.page-title {{pageTitle}}
+    .container
+      h1.page-title {{pageTitle}}
     .reviews-container
-      .reviews__form(v-if="showAddingForm")    
-        add-new-review(
-          :title="formTitle"
-          :mode="mode"
-          @cancel="showAddingForm = false"
-        )
-      ul.reviews
-        li.reviews__item
-          add-new(
-            @click="addNewReview"
+      .container.container--mobile-wide
+        .reviews__form(v-if="showAddingForm")    
+          add-new-review(
+            :title="formTitle"
+            :mode="mode"
+            @cancel="showAddingForm = false"
           )
-        li.reviews__item(v-for="review in reviews")
-          reviews-item(
-            :review="review"
-            @updateWork="updateWork"
-          )
+        ul.reviews
+          li.reviews__item
+            add-new(
+              @click="addNewReview"
+            )
+          li.reviews__item(v-for="review in reviews")
+            reviews-item(
+              :review="review"
+              @updateWork="updateWork"
+            )
 </template>
 
 <script>
@@ -86,6 +88,8 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+@import "../../../styles/mixins.pcss";
+
 .reviews {
   display: flex;
   flex-wrap: wrap;
@@ -96,6 +100,13 @@ export default {
   margin-left: 30px;
   width: calc(100% / 3 - 30px);
   margin-bottom: 30px;
+  @include tablets {
+    width: calc(100% / 2 - 30px);
+  }
+  @include phones {
+    width: 100%;
+    margin-bottom: 15px;
+  }
 }
 
 .reviews__form {

@@ -5,7 +5,9 @@
     )
       template(slot="content")
         slot(name="form-content")
-        .edit-form__buttons
+        .edit-form__buttons(
+          :style="{'padding' : buttonsPadding}"
+        )
           .edit-form__buttons-item
             app-button(
               text="Отмена"
@@ -27,6 +29,10 @@ export default {
       type: String,
       default: "Форма добавления элемента"
     },
+    buttonsPadding: {
+      type: String,
+      default: "0"
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -40,10 +46,15 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+@import "../../styles/mixins.pcss";
 
 .edit-form__buttons {
   display: flex;
   justify-content: flex-end;
+
+  @include tablets {
+    padding: 0 !important; 
+  }
 }
 
 .edit-form__buttons-item {

@@ -1,22 +1,24 @@
 <template lang="pug">
   .works-section
-    h1.page-title {{pageTitle}}
+    .container
+      h1.page-title {{pageTitle}}
     .works-container
-      add-new-work-form(
-        v-if="showForm"
-        :mode="mode"
-        @closeForm="showForm = false"
-      )
-      ul.works
-        li.works__item
-          add-new-button(
-            @click="openAddingForm"
-          )
-        li.works__item(v-for="work in works")
-          works-item(
-            :work="work"
-            @updateWork="updateWork"
-          )
+      .container.container--mobile-wide
+        add-new-work-form(
+          v-if="showForm"
+          :mode="mode"
+          @closeForm="showForm = false"
+        )
+        ul.works
+          li.works__item
+            add-new-button(
+              @click="openAddingForm"
+            )
+          li.works__item(v-for="work in works")
+            works-item(
+              :work="work"
+              @updateWork="updateWork"
+            )
             
 </template>
 
@@ -97,6 +99,7 @@ export default {
   @include phones {
     width: 100%;
     margin-left: 0;
+    margin-bottom: 15px;
   }
 }
 </style>

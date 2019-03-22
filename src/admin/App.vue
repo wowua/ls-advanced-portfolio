@@ -10,8 +10,7 @@
         section.tabs-container
           tabs
         main.content-container
-          .container
-            router-view(:pageTitle="$route.meta.title")
+          router-view(:pageTitle="$route.meta.title")
     .tooltips-container(:class="{'showed' : showed}")
         tooltip(type="error")
 </template>
@@ -53,7 +52,7 @@ export default {
 @import "normalize.css";
 @import "../styles/mixins.pcss";
 @import "../styles/layout/base.pcss";
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800");
 
 .root-wrapper-container {
   height: 100%;
@@ -62,16 +61,16 @@ export default {
 .header-container {
   background: linear-gradient(to right, #3e3e59, #454573);
   padding: 15px 0;
+
+  @include phones {
+    padding: 20px 0;
+  }
 }
 
 .root-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-.content-container {
-  background: url("~images/bg/admin.jpg") center center no-repeat / cover;
 }
 
 .admin-wrapper {
@@ -86,8 +85,13 @@ export default {
 }
 
 .content-container {
+  background: url("~images/bg/admin.jpg") center center no-repeat / cover;
   flex: 1;
   padding-top: 60px;
+
+  @include phones {
+    padding-top: 30px;
+  }
 }
 
 .page-title {
@@ -100,7 +104,7 @@ export default {
   position: fixed;
   bottom: 0;
   left: 50%;
-  transform: translate(-50%, 110%) ;
+  transform: translate(-50%, 110%);
   visibility: hidden;
   transition: 0.3s;
 

@@ -7,7 +7,7 @@
             img(src="../../images/content/user.jpg").user__pic-avatar
           .user__name 
             span Владимир Астаханов
-            a.exit-btn Выйти
+            a.exit-btn(@click="logout") Выйти
             
         .header__title Панель администрирования
       a.exit-btn(@click="logout") Выйти

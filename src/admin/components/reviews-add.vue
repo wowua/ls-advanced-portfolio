@@ -2,6 +2,7 @@
   adding-form(
     :title="title"
     :disabled="disableForm"
+    buttonsPadding="0 20% 0 0"
     @submit="mode === 'add' ? addNewReview() : editCurrentReview()"
     @cancel="closeForm"
   )
@@ -190,12 +191,20 @@ export default {
 };
 </script>
 
-
-
 <style lang="postcss" scoped>
+@import "../../styles/mixins.pcss";
+
 .reviews__form-content {
   display: flex;
   padding-right: 20%;
+
+  @include tablets {
+    padding-right: 0;
+  }  
+
+  @include phones {
+    flex-direction: column;
+  }  
 }
 
 .reviews__form-addphoto {
@@ -205,6 +214,9 @@ export default {
 .reviews__form-row {
   display: flex;
   margin-bottom: 40px;
+  @include tablets {
+    flex-direction: column;
+  }  
 }
 .reviews__form-col {
   flex: 1;
@@ -213,6 +225,15 @@ export default {
 .reviews__form-block {
   flex: 1;
   margin-right: 30px;
+
+  @include tablets {
+    margin-right: 0;
+    margin-bottom: 40px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }  
 
   &:last-child {
     margin-right: 0;
@@ -236,6 +257,11 @@ export default {
   flex-direction: column;
   align-items: center;
   margin-right: 30px;
+
+  @include phones {
+    margin-right: 0;
+    margin-bottom: 30px;
+  }  
 }
 
 .reviews__form-avatar-empty {

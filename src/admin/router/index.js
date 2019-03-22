@@ -15,28 +15,24 @@ Vue.use(VueRouter);
 
 const baseURL = requests.defaults.baseURL;
 
-const guard = axios.create({
-  baseURL
-});
+const guard = axios.create({ baseURL });
 
 const router = new VueRouter({ routes });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const isPublicRoute = to.matched.some(record => record.meta.public);
   const isUserLogged = store.getters["user/userIsLogged"];
 
   if (isPublicRoute === false && isUserLogged === false) {
     setAuthHttpHeaderToAxios(guard, getToken());
-    guard
-      .get("/user")
-      .then(response => {
-        next();
-        store.commit("user/SET_USER", response.data.user);
-      })
-      .catch(error => {
-        router.replace("/login");
-        removeToken();
-      });
+    try {
+      const response = await guard.get("/user");
+      store.commit("user/SET_USER", response.data.user);
+      next();
+    } catch (error) {
+      router.replace("/login");
+      removeToken();
+    }
   } else {
     next();
   }
