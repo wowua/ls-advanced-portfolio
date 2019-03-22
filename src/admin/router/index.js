@@ -28,6 +28,7 @@ router.beforeEach((to, from, next) => {
       .get("/user")
       .then(response => {
         next();
+        store.commit('user/SET_USER', response.data.user)
       })
       .catch(error => {
         router.replace("/login");

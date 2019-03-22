@@ -38,9 +38,10 @@ export default {
         generateStdError(error);
       }
     },
-    async fetchReviews({ commit }) {
+    async fetchReviews({ commit, rootGetters }) {
       try {
-        const response = await this.$axios.get("/reviews/1");
+        const userId = rootGetters['user/userId'];
+        const response = await this.$axios.get(`/reviews/${userId}`);
         commit("SET_REVIEWS_STATE", response.data);
         return response;
       } catch (error) {
