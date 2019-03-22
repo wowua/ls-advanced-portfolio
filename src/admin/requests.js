@@ -6,7 +6,8 @@ import {
   setToken
 } from "@/helpers/token";
 
-axios.defaults.baseURL = "http://localhost:8000";
+// axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = "https://webdev-api.loftschool.com/";
 
 const token = getToken();
 if (token) setAuthHttpHeaderToAxios(axios, token);

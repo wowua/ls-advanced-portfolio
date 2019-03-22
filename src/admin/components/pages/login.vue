@@ -52,8 +52,8 @@ export default {
     return {
       disableSubmit: false,
       user: {
-        name: "admin",
-        password: "admin"
+        name: "ls-admin",
+        password: "ls-admin"
       }
     };
   },
