@@ -36,7 +36,7 @@ export default {
     logout({ commit }) {
       commit("CLEAR_USER");
       removeToken();
-      location.href = "/";
+      location.href = process.env.HOME_URL
     }
   }
 };
