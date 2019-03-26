@@ -161,6 +161,7 @@ export default {
     height: 20px;
     border-radius: 50%;
     background-image: linear-gradient(to right, #006aed, #3f35cb);
+    line-height: 20px;
     color: #fff;
     margin-right: 13px;
     flex-shrink: 0;

@@ -155,6 +155,7 @@ export default {
     font-size: 30px;
     color: #fff;
     font-weight: 600;
+    line-height: 40px;
   }
 }
 </style>
