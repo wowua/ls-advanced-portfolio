@@ -117,7 +117,6 @@ module.exports = (env, argv) => {
   if (isProductionBuild) {
     configTemplate.devtool = "none";
     configTemplate.plugins = (configTemplate.plugins || []).concat([
-      new CleanWebpackPlugin(),
       new webpack.DefinePlugin({
         "process.env": {
           NODE_ENV: '"production"'
