@@ -6,6 +6,9 @@ const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
+
 
 module.exports = (env, argv) => {
   const isProductionBuild = argv.mode === "production";
@@ -104,6 +107,7 @@ module.exports = (env, argv) => {
       hints: false
     },
     plugins: [
+      new Dotenv(),
       new SpriteLoaderPlugin({ plainSprite: true }),
       new VueLoaderPlugin()
     ],
@@ -113,6 +117,7 @@ module.exports = (env, argv) => {
   if (isProductionBuild) {
     configTemplate.devtool = "none";
     configTemplate.plugins = (configTemplate.plugins || []).concat([
+      new CleanWebpackPlugin(),
       new webpack.DefinePlugin({
         "process.env": {
           NODE_ENV: '"production"'
