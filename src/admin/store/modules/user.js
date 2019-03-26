@@ -36,7 +36,7 @@ export default {
     logout({ commit }) {
       commit("CLEAR_USER");
       removeToken();
-      location.href = process.env.HOME_URL
+      location.href = "/ls-advanced-portfolio"
     }
   }
 };
